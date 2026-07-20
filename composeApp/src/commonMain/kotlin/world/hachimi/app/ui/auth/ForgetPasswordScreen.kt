@@ -123,7 +123,7 @@ fun ForgetPasswordScreen(vm: ForgetPasswordViewModel = koinViewModel()) {
                         value = vm.password,
                         onValueChange = {
                             vm.password = it.singleLined()
-                            showTooShortHelp = validatePasswordPattern(vm.password)
+                            showTooShortHelp = !validatePasswordPattern(vm.password)
                         },
                         leadingIcon = { Icon(Icons.Outlined.Lock, null) },
                         placeholder = { Text(stringResource(Res.string.auth_new_password_placeholder)) },

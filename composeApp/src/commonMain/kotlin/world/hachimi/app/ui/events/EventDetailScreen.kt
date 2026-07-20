@@ -49,6 +49,7 @@ import world.hachimi.app.ui.LocalContentInsets
 import world.hachimi.app.ui.component.LoadingPage
 import world.hachimi.app.ui.component.MarkdownText
 import world.hachimi.app.ui.component.ReloadPage
+import world.hachimi.app.ui.component.ScreenScaffold
 import world.hachimi.app.ui.design.components.LocalContentColor
 import world.hachimi.app.ui.design.components.Text
 import world.hachimi.app.ui.player.fullscreen.components.AmbientUserChip
@@ -73,12 +74,18 @@ fun EventDetailScreen(
         onDispose { vm.dispose() }
     }
 
-    AnimatedContent(vm.initStat) { st ->
-        when (st) {
-            InitializeStatus.INIT -> LoadingPage()
-            InitializeStatus.FAILED -> ReloadPage(onReloadClick = { vm.retry() })
-            InitializeStatus.LOADED -> EventDetailContent(data = vm.data) {
-                navigator.push(Route.Root.PublicUserSpace(it))
+    ScreenScaffold(
+        title = { Text(if (vm.initStat == InitializeStatus.LOADED) vm.data?.title.orEmpty() else "", maxLines = 1) },
+        showBack = true,
+        onBack = navigator::back,
+    ) {
+        AnimatedContent(vm.initStat, modifier = Modifier.fillMaxSize()) { st ->
+            when (st) {
+                InitializeStatus.INIT -> LoadingPage()
+                InitializeStatus.FAILED -> ReloadPage(onReloadClick = { vm.retry() })
+                InitializeStatus.LOADED -> EventDetailContent(data = vm.data) {
+                    navigator.push(Route.Root.PublicUserSpace(it))
+                }
             }
         }
     }
@@ -142,11 +149,6 @@ private fun EventDetailContent(
                 )
 
             }
-            Text(
-                text = data.title,
-                style = MaterialTheme.typography.headlineMedium
-            )
-
             if (data.coverUrl != null) {
                 Surface(
                     Modifier.fillMaxWidth().aspectRatio(16f / 9f),

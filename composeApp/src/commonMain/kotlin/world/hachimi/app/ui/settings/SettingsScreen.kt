@@ -69,6 +69,7 @@ import world.hachimi.app.model.Settings
 import world.hachimi.app.nav.LocalNavigator
 import world.hachimi.app.nav.Route
 import world.hachimi.app.ui.LocalContentInsets
+import world.hachimi.app.ui.component.ScreenScaffold
 import world.hachimi.app.ui.design.components.Card
 import world.hachimi.app.ui.design.components.Select
 import world.hachimi.app.ui.design.components.Switcher
@@ -81,15 +82,19 @@ import world.hachimi.app.ui.util.fillMaxWidthIn
 fun SettingsScreen(
     globalStore: GlobalStore = koinInject<GlobalStore>()
 ) {
-    Column(
-        Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(AdaptiveScreenMargin)
-            .navigationBarsPadding()
-            .padding(LocalContentInsets.current.asPaddingValues())
-            .fillMaxWidthIn(),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+    val navigator = LocalNavigator.current
+    ScreenScaffold(
+        title = { Text(stringResource(Res.string.settings_title), maxLines = 1) },
+        showBack = true,
+        onBack = navigator::back,
     ) {
-        Text(stringResource(Res.string.settings_title), style = MaterialTheme.typography.titleLarge)
-
+        Column(
+            Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(AdaptiveScreenMargin)
+                .navigationBarsPadding()
+                .padding(LocalContentInsets.current.asPaddingValues())
+                .fillMaxWidthIn(),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
         Section(title = { Text("显示") }) {
             LanguageSetting(globalStore.settings)
             DarkModeSetting(globalStore)
@@ -113,6 +118,7 @@ fun SettingsScreen(
 
         Section(title = { Text("关于") }) {
             Info(globalStore)
+        }
         }
     }
 }

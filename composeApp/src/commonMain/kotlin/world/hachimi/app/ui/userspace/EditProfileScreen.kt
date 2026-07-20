@@ -77,6 +77,7 @@ import world.hachimi.app.api.CoilHeaders
 import world.hachimi.app.api.module.UserModule
 import world.hachimi.app.model.EditProfileViewModel
 import world.hachimi.app.ui.LocalContentInsets
+import world.hachimi.app.ui.component.ScreenScaffold
 import world.hachimi.app.ui.design.components.AccentButton
 import world.hachimi.app.ui.design.components.AlertDialog
 import world.hachimi.app.ui.design.components.Card
@@ -90,32 +91,36 @@ import world.hachimi.app.ui.design.components.ToggleButton
 import world.hachimi.app.ui.util.AdaptiveScreenMargin
 import world.hachimi.app.ui.util.PlatformIcons
 import world.hachimi.app.ui.util.fillMaxWidthIn
+import world.hachimi.app.nav.LocalNavigator
 
 @Composable
 fun EditProfileScreen(vm: EditProfileViewModel = koinViewModel()) {
-    Column(
-        Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(AdaptiveScreenMargin)
-            .navigationBarsPadding().padding(LocalContentInsets.current.asPaddingValues()).fillMaxWidthIn(),
-        verticalArrangement = Arrangement.spacedBy(24.dp)
-    ) {
-        Text(
-            text = stringResource(Res.string.user_edit_profile),
-            style = MaterialTheme.typography.titleLarge
-        )
+    val navigator = LocalNavigator.current
 
-        AnimatedContent(
-            targetState = vm.loadingProfile,
-            transitionSpec = { materialFadeThrough() }
-        ) { loading ->
-            if (loading) {
-                Box(
-                    Modifier.fillMaxWidth().height(200.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator()
+    ScreenScaffold(
+        title = { Text(stringResource(Res.string.user_edit_profile), maxLines = 1) },
+        showBack = true,
+        onBack = navigator::back,
+    ) {
+        Column(
+            Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(AdaptiveScreenMargin)
+                .navigationBarsPadding().padding(LocalContentInsets.current.asPaddingValues()).fillMaxWidthIn(),
+            verticalArrangement = Arrangement.spacedBy(24.dp)
+        ) {
+            AnimatedContent(
+                targetState = vm.loadingProfile,
+                transitionSpec = { materialFadeThrough() }
+            ) { loading ->
+                if (loading) {
+                    Box(
+                        Modifier.fillMaxWidth().height(200.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                } else {
+                    Content(vm)
                 }
-            } else {
-                Content(vm)
             }
         }
     }

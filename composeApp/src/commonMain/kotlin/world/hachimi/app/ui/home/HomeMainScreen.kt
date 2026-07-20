@@ -62,6 +62,7 @@ import world.hachimi.app.ui.LocalContentInsets
 import world.hachimi.app.ui.LocalWindowSize
 import world.hachimi.app.ui.component.LoadingPage
 import world.hachimi.app.ui.component.ReloadPage
+
 import world.hachimi.app.ui.design.components.Button
 import world.hachimi.app.ui.design.components.Icon
 import world.hachimi.app.ui.design.components.Text

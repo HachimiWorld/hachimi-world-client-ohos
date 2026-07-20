@@ -17,7 +17,6 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
@@ -30,9 +29,11 @@ import world.hachimi.app.model.CategorySongsViewModel
 import world.hachimi.app.model.GlobalStore
 import world.hachimi.app.model.InitializeStatus
 import world.hachimi.app.model.fromSearchSongItem
+import world.hachimi.app.nav.LocalNavigator
 import world.hachimi.app.ui.LocalContentInsets
 import world.hachimi.app.ui.component.LoadingPage
 import world.hachimi.app.ui.component.ReloadPage
+import world.hachimi.app.ui.component.ScreenScaffold
 import world.hachimi.app.ui.design.components.Button
 import world.hachimi.app.ui.design.components.Icon
 import world.hachimi.app.ui.design.components.Text
@@ -48,15 +49,23 @@ fun CategorySongsScreen(
     vm: CategorySongsViewModel = koinViewModel(),
     global: GlobalStore = koinInject(),
 ) {
+    val navigator = LocalNavigator.current
+
     DisposableEffect(category, vm) {
         vm.mounted(category)
         onDispose { vm.unmount() }
     }
-    AnimatedContent(vm.initializeStatus, modifier = Modifier.fillMaxSize()) {
-        when (it) {
-            InitializeStatus.INIT -> LoadingPage()
-            InitializeStatus.FAILED -> ReloadPage(onReloadClick = { vm.retry() })
-            InitializeStatus.LOADED -> Content(category, vm, global)
+    ScreenScaffold(
+        title = { Text(category, maxLines = 1) },
+        showBack = true,
+        onBack = navigator::back
+    ) {
+        AnimatedContent(vm.initializeStatus, modifier = Modifier.fillMaxSize()) {
+            when (it) {
+                InitializeStatus.INIT -> LoadingPage()
+                InitializeStatus.FAILED -> ReloadPage(onReloadClick = { vm.retry() })
+                InitializeStatus.LOADED -> Content(category, vm, global)
+            }
         }
     }
 }
@@ -78,11 +87,6 @@ private fun Content(category: String, vm: CategorySongsViewModel, global: Global
                     modifier = Modifier,
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
-                    Text(
-                        modifier = Modifier.align(Alignment.CenterVertically),
-                        text = "${category}", style = MaterialTheme.typography.titleLarge
-                    )
-
                     Spacer(Modifier.weight(1f))
 
                     Button(

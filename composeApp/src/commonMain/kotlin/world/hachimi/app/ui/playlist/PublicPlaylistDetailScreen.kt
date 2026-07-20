@@ -16,6 +16,8 @@ import world.hachimi.app.model.PublicPlaylistViewModel
 import world.hachimi.app.nav.LocalNavigator
 import world.hachimi.app.nav.Route
 import world.hachimi.app.ui.LocalWindowSize
+import world.hachimi.app.ui.component.ScreenScaffold
+import world.hachimi.app.ui.design.components.Text
 import world.hachimi.app.ui.playlist.components.CompactHeader
 import world.hachimi.app.ui.playlist.components.FavoriteButton
 import world.hachimi.app.ui.playlist.components.Header
@@ -32,6 +34,8 @@ fun PublicPlaylistScreen(
     playlistId: Long,
     vm: PublicPlaylistViewModel = koinViewModel()
 ) {
+    val navigator = LocalNavigator.current
+
     DisposableEffect(vm, playlistId) {
         vm.mounted(playlistId)
         onDispose {
@@ -39,6 +43,11 @@ fun PublicPlaylistScreen(
         }
     }
 
+    ScreenScaffold(
+        title = { Text(vm.playlistInfo?.name.orEmpty(), maxLines = 1) },
+        showBack = true,
+        onBack = navigator::back,
+    ) {
     InitStatusScaffold(
         initializeStatus = vm.initStatus,
         isLoading = vm.loading,
@@ -73,6 +82,7 @@ fun PublicPlaylistScreen(
                 listTailSpacerItem()
             }
         }
+    }
     }
 }
 

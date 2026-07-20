@@ -44,10 +44,12 @@ import world.hachimi.app.model.GlobalStore
 import world.hachimi.app.model.InitializeStatus
 import world.hachimi.app.model.RecentPublishViewModel
 import world.hachimi.app.model.fromPublicDetail
+import world.hachimi.app.nav.LocalNavigator
 import world.hachimi.app.ui.LocalContentInsets
 import world.hachimi.app.ui.component.LoadMoreItem
 import world.hachimi.app.ui.component.LoadingPage
 import world.hachimi.app.ui.component.ReloadPage
+import world.hachimi.app.ui.component.ScreenScaffold
 import world.hachimi.app.ui.design.components.Button
 import world.hachimi.app.ui.design.components.HachimiIconButton
 import world.hachimi.app.ui.design.components.Icon
@@ -67,15 +69,23 @@ fun RecentPublishScreen(
     vm: RecentPublishViewModel = koinViewModel(),
     global: GlobalStore = koinInject()
 ) {
+    val navigator = LocalNavigator.current
+
     DisposableEffect(vm) {
         vm.mounted()
         onDispose { vm.unmount() }
     }
-    AnimatedContent(vm.initializeStatus, modifier = Modifier.fillMaxSize()) {
-        when (it) {
-            InitializeStatus.INIT -> LoadingPage()
-            InitializeStatus.FAILED -> ReloadPage(onReloadClick = { vm.retry() })
-            InitializeStatus.LOADED -> Content(vm, global)
+    ScreenScaffold(
+        title = { Text(stringResource(Res.string.home_recent_title), maxLines = 1) },
+        showBack = true,
+        onBack = navigator::back,
+    ) {
+        AnimatedContent(vm.initializeStatus, modifier = Modifier.fillMaxSize()) {
+            when (it) {
+                InitializeStatus.INIT -> LoadingPage()
+                InitializeStatus.FAILED -> ReloadPage(onReloadClick = { vm.retry() })
+                InitializeStatus.LOADED -> Content(vm, global)
+            }
         }
     }
 }
@@ -109,9 +119,6 @@ private fun Content(vm: RecentPublishViewModel, global: GlobalStore) {
             ) {
                 item(span = { GridItemSpan(maxLineSpan) }) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(
-                            text = stringResource(Res.string.home_recent_title), style = MaterialTheme.typography.titleLarge
-                        )
                         if (constraintMaxWidth >= WindowSize.COMPACT) {
                             HachimiIconButton(
                                 modifier = Modifier.padding(start = 8.dp),

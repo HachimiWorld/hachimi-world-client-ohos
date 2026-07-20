@@ -60,6 +60,7 @@ import world.hachimi.app.nav.LocalNavigator
 import world.hachimi.app.ui.LocalContentInsets
 import world.hachimi.app.ui.component.LoadingPage
 import world.hachimi.app.ui.component.ReloadPage
+import world.hachimi.app.ui.component.ScreenScaffold
 import world.hachimi.app.ui.creation.publish.components.FormItem
 import world.hachimi.app.ui.creation.publish.components.InitJmidDialog
 import world.hachimi.app.ui.creation.publish.components.JmidTextField
@@ -96,11 +97,21 @@ fun PublishScreen(
         onDispose { vm.dispose() }
     }
     HandleNavigationRequests(vm.navigationRequests, navigator)
-    AnimatedContent(vm.initializeStatus) {
-        when (it) {
-            InitializeStatus.INIT -> LoadingPage()
-            InitializeStatus.FAILED -> ReloadPage(onReloadClick = { vm.retry() })
-            InitializeStatus.LOADED -> Content(vm, global)
+    val screenTitle = when (vm.initializeStatus) {
+        InitializeStatus.LOADED -> if (vm.type == Type.CREATE) "发布作品" else "编辑作品"
+        else -> "发布作品"
+    }
+    ScreenScaffold(
+        title = { Text(screenTitle, maxLines = 1) },
+        showBack = true,
+        onBack = navigator::back
+    ) {
+        AnimatedContent(vm.initializeStatus) {
+            when (it) {
+                InitializeStatus.INIT -> LoadingPage()
+                InitializeStatus.FAILED -> ReloadPage(onReloadClick = { vm.retry() })
+                InitializeStatus.LOADED -> Content(vm, global)
+            }
         }
     }
 
@@ -125,11 +136,6 @@ private fun Content(vm: PublishViewModel, global: GlobalStore) {
                 .padding(AdaptiveScreenMargin),
             verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
-            Text(
-                if (vm.type == Type.CREATE) "发布作品" else "编辑作品",
-                style = MaterialTheme.typography.titleLarge
-            )
-
             if (vm.type == Type.CREATE) Text(
                 "温馨提示：\n本站尊重每一位创作者的劳动成果，因此我们不会收录搬运的作品。\n若您是首次投稿，您可以前往个人资料页绑定您的 BiliBili 账号便于审核确认您是作者。\n此外，暂不收录下类作品：\n1. 时长过短的作品（建议至少包含一整个段落）；\n2. 与“哈基米音乐”无关的作品；\n3. 不适宜收录的作品（如政治敏感等）",
                 style = MaterialTheme.typography.bodyMedium

@@ -14,7 +14,6 @@ import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Alignment
@@ -29,6 +28,8 @@ import world.hachimi.app.nav.LocalNavigator
 import world.hachimi.app.nav.Navigator
 import world.hachimi.app.nav.Route
 import world.hachimi.app.ui.LocalContentInsets
+import world.hachimi.app.ui.component.ScreenScaffold
+import world.hachimi.app.ui.design.components.Text
 import world.hachimi.app.ui.playlist.components.FavoritePlaylistItem
 import world.hachimi.app.ui.playlist.components.PlaylistItem
 import world.hachimi.app.ui.util.AdaptiveListSpacing
@@ -44,12 +45,16 @@ fun PlaylistScreen(vm: PlaylistViewModel = koinViewModel()) {
         onDispose { vm.dispose() }
     }
     val navigator = LocalNavigator.current
-    InitStatusScaffold(
-        initializeStatus = vm.initializeStatus,
-        isLoading = vm.playlistIsLoading,
-        onRetryClick = { vm.retry() },
+    ScreenScaffold(
+        title = { Text(stringResource(Res.string.playlist_my_playlists_title), maxLines = 1) },
     ) {
-        Content(vm, navigator)
+        InitStatusScaffold(
+            initializeStatus = vm.initializeStatus,
+            isLoading = vm.playlistIsLoading,
+            onRetryClick = { vm.retry() },
+        ) {
+            Content(vm, navigator)
+        }
     }
 }
 
@@ -69,14 +74,6 @@ private fun Content(vm: PlaylistViewModel, navigator: Navigator) {
             verticalArrangement = Arrangement.spacedBy(AdaptiveListSpacing),
             horizontalArrangement = Arrangement.spacedBy(AdaptiveListSpacing)
         ) {
-            item(span = { GridItemSpan(maxLineSpan) }, contentType = "my-header") {
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = stringResource(Res.string.playlist_my_playlists_title),
-                    style = MaterialTheme.typography.titleLarge
-                )
-            }
-
             items(vm.playlists, key = { item -> "my_${item.id}" }, contentType = { "my" }) { item ->
                 PlaylistItem(
                     modifier = Modifier.fillMaxWidth(),

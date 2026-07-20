@@ -16,7 +16,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -45,6 +44,7 @@ import world.hachimi.app.model.InitializeStatus
 import world.hachimi.app.nav.LocalNavigator
 import world.hachimi.app.ui.LocalContentInsets
 import world.hachimi.app.ui.LocalWindowSize
+import world.hachimi.app.ui.component.ScreenScaffold
 import world.hachimi.app.ui.design.components.Text
 import world.hachimi.app.ui.follow.components.BottomLoader
 import world.hachimi.app.ui.follow.components.EmptyState
@@ -53,7 +53,6 @@ import world.hachimi.app.ui.follow.components.FollowerItemCard
 import world.hachimi.app.ui.follow.components.FollowingItemCard
 import world.hachimi.app.ui.follow.components.LoadingSkeleton
 import world.hachimi.app.ui.follow.components.UnfollowDialog
-import world.hachimi.app.ui.util.AdaptiveScreenMargin
 import world.hachimi.app.ui.util.WindowSize
 import world.hachimi.app.ui.util.listTailSpacerItem
 
@@ -69,17 +68,17 @@ fun FollowListScreen(
         onDispose { vm.dispose() }
     }
 
-    Column(Modifier.fillMaxSize()) {
-        // Top bar
-        Text(
-            modifier = Modifier.padding(AdaptiveScreenMargin),
-            text = when (type) {
-                FollowListType.FOLLOWING -> stringResource(Res.string.follow_following_list_title)
-                FollowListType.FOLLOWERS -> stringResource(Res.string.follow_followers_list_title)
-            },
-            style = MaterialTheme.typography.titleLarge
-        )
+    val title = when (type) {
+        FollowListType.FOLLOWING -> stringResource(Res.string.follow_following_list_title)
+        FollowListType.FOLLOWERS -> stringResource(Res.string.follow_followers_list_title)
+    }
 
+    ScreenScaffold(
+        title = { Text(title, maxLines = 1) },
+        showBack = type == FollowListType.FOLLOWERS,
+        onBack = navigator::back,
+    ) {
+        Column(Modifier.fillMaxSize()) {
         // Content
         val itemsEmpty = when (type) {
             FollowListType.FOLLOWING -> vm.followingItems.isEmpty()
@@ -119,6 +118,7 @@ fun FollowListScreen(
                     FollowersList(vm, listState, isCompact)
                 }
             }
+        }
         }
     }
 

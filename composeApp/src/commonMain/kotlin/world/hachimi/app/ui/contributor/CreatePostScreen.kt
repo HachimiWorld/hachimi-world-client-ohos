@@ -16,7 +16,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Alignment
@@ -33,6 +32,7 @@ import world.hachimi.app.nav.LocalNavigator
 import world.hachimi.app.ui.LocalContentInsets
 import world.hachimi.app.ui.component.LoadingPage
 import world.hachimi.app.ui.component.ReloadPage
+import world.hachimi.app.ui.component.ScreenScaffold
 import world.hachimi.app.ui.creation.publish.components.FormItem
 import world.hachimi.app.ui.design.components.AlertDialog
 import world.hachimi.app.ui.design.components.Button
@@ -47,16 +47,24 @@ import world.hachimi.app.util.singleLined
 
 @Composable
 fun CreatePostScreen(global: GlobalStore = koinInject(), vm: CreatePostViewModel = koinViewModel()) {
+    val navigator = LocalNavigator.current
+
     DisposableEffect(vm) {
         vm.mounted()
         onDispose { }
     }
 
-    AnimatedContent(vm.initializeStatus) {
-        when (it) {
-            InitializeStatus.INIT -> LoadingPage()
-            InitializeStatus.FAILED -> ReloadPage(onReloadClick = { vm.retry() })
-            InitializeStatus.LOADED -> Content(vm, global)
+    ScreenScaffold(
+        title = { Text("发布文章", maxLines = 1) },
+        showBack = true,
+        onBack = navigator::back
+    ) {
+        AnimatedContent(vm.initializeStatus) {
+            when (it) {
+                InitializeStatus.INIT -> LoadingPage()
+                InitializeStatus.FAILED -> ReloadPage(onReloadClick = { vm.retry() })
+                InitializeStatus.LOADED -> Content(vm, global)
+            }
         }
     }
 }
@@ -74,8 +82,6 @@ private fun Content(vm: CreatePostViewModel, global: GlobalStore) {
             modifier = Modifier.fillMaxWidthIn().padding(AdaptiveScreenMargin),
             verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
-            Text("发布文章", style = MaterialTheme.typography.titleLarge)
-
             ElevatedCard {
                 Column(
                     modifier = Modifier.fillMaxWidth().padding(16.dp),

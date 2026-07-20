@@ -50,7 +50,6 @@ import hachimiworld.composeapp.generated.resources.user_space_empty
 import hachimiworld.composeapp.generated.resources.user_space_tab_activity
 import hachimiworld.composeapp.generated.resources.user_space_tab_playlists
 import hachimiworld.composeapp.generated.resources.user_space_tab_songs
-import hachimiworld.composeapp.generated.resources.user_space_title
 import hachimiworld.composeapp.generated.resources.user_space_uid_prefix
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -65,6 +64,7 @@ import world.hachimi.app.nav.Navigator
 import world.hachimi.app.nav.Route
 import world.hachimi.app.ui.LocalWindowSize
 import world.hachimi.app.ui.component.Pagination
+import world.hachimi.app.ui.component.ScreenScaffold
 import world.hachimi.app.ui.design.HachimiTheme
 import world.hachimi.app.ui.design.components.Button
 import world.hachimi.app.ui.design.components.CircularProgressIndicator
@@ -93,6 +93,7 @@ import world.hachimi.app.ui.util.listTailSpacerItem
 @Composable
 fun UserSpaceScreen(
     uid: Long?,
+    showToolbar: Boolean = true,
     vm: UserSpaceViewModel = koinViewModel(),
     global: GlobalStore = koinInject()
 ) {
@@ -103,12 +104,14 @@ fun UserSpaceScreen(
         }
     }
 
-    BoxWithConstraints {
-        val constraintsMaxWidth = maxWidth
-        var selectedTab by remember { mutableIntStateOf(0) }
-        val navigator = LocalNavigator.current
+    val navigator = LocalNavigator.current
 
-        LazyVerticalGrid(
+    val content: @Composable () -> Unit = {
+        BoxWithConstraints {
+            val constraintsMaxWidth = maxWidth
+            var selectedTab by remember { mutableIntStateOf(0) }
+
+            LazyVerticalGrid(
             modifier = Modifier.fillMaxSize(),
             columns = calculateGridColumns(constraintsMaxWidth),
             contentPadding = contentPaddingForMaxWidth(
@@ -118,7 +121,7 @@ fun UserSpaceScreen(
             horizontalArrangement = Arrangement.spacedBy(AdaptiveListSpacing),
         ) {
             item(span = { GridItemSpan(maxLineSpan) }) {
-                Header(vm, global, Modifier.fillMaxWidth())
+                Header(vm, Modifier.fillMaxWidth())
             }
 
             item(span = { GridItemSpan(maxLineSpan) }) {
@@ -152,6 +155,32 @@ fun UserSpaceScreen(
 
             listTailSpacerItem()
         }
+        }
+    }
+
+    if (showToolbar) {
+        ScreenScaffold(
+            title = { Text(vm.profile?.username.orEmpty(), maxLines = 1) },
+            showBack = true,
+            onBack = navigator::back,
+            actions = {
+                if (vm.myself) {
+                    HachimiIconButton(onClick = { navigator.push(Route.Root.EditProfile) }) {
+                        Icon(
+                            Icons.Default.Edit,
+                            contentDescription = stringResource(Res.string.user_edit_profile)
+                        )
+                    }
+                    TextButton(onClick = { global.logout() }) {
+                        Text(stringResource(Res.string.auth_logout))
+                    }
+                }
+            },
+        ) {
+            content()
+        }
+    } else {
+        content()
     }
 }
 
@@ -250,7 +279,6 @@ private fun LazyGridScope.playlistsTabContents(
 @Composable
 private fun Header(
     vm: UserSpaceViewModel,
-    global: GlobalStore,
     modifier: Modifier = Modifier,
 ) {
     val navigator = LocalNavigator.current
@@ -268,25 +296,6 @@ private fun Header(
     }
 
     Column(modifier, verticalArrangement = Arrangement.spacedBy(24.dp)) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(
-                modifier = Modifier.weight(1f),
-                text = stringResource(Res.string.user_space_title),
-                style = MaterialTheme.typography.titleLarge
-            )
-            if (vm.myself) {
-                HachimiIconButton(onClick = { navigator.push(Route.Root.EditProfile) }) {
-                    Icon(
-                        Icons.Default.Edit,
-                        contentDescription = stringResource(Res.string.user_edit_profile)
-                    )
-                }
-                TextButton(onClick = { global.logout() }) {
-                    Text(stringResource(Res.string.auth_logout))
-                }
-            }
-        }
-
         HeaderProfileContent(
             profile = vm.profile,
             loading = vm.loadingProfile,

@@ -52,6 +52,7 @@ import world.hachimi.app.api.CoilHeaders
 import world.hachimi.app.api.module.SongModule
 import world.hachimi.app.model.RecentLikeViewModel
 import world.hachimi.app.ui.component.LoadMoreItem
+import world.hachimi.app.ui.component.ScreenScaffold
 import world.hachimi.app.ui.design.HachimiTheme
 import world.hachimi.app.ui.design.components.Button
 import world.hachimi.app.ui.design.components.HachimiIconButton
@@ -77,13 +78,24 @@ fun RecentLikeScreen(
 		onDispose { vm.dispose() }
 	}
 
-	InitStatusScaffold(
-        initializeStatus = vm.initializeStatus,
-        isLoading = vm.loading,
-        onRetryClick = { vm.retry() },
-        modifier = Modifier.fillMaxSize(),
-    ) {
-		Content(vm)
+	ScreenScaffold(
+		title = { Text(stringResource(Res.string.nav_recent_like), maxLines = 1) },
+		actions = {
+			Button(onClick = { vm.playAllLoaded() }) {
+				Icon(Icons.Default.PlayArrow, contentDescription = stringResource(Res.string.common_play_cd))
+				Spacer(Modifier.size(8.dp))
+				Text(stringResource(Res.string.play_all))
+			}
+		},
+	) {
+		InitStatusScaffold(
+			initializeStatus = vm.initializeStatus,
+			isLoading = vm.loading,
+			onRetryClick = { vm.retry() },
+			modifier = Modifier.fillMaxSize(),
+		) {
+			Content(vm)
+		}
 	}
 }
 
@@ -111,10 +123,6 @@ private fun Content(vm: RecentLikeViewModel) {
 			contentPadding = contentPaddingForMaxWidth(PaddingValues(AdaptiveScreenMargin), maxWidth),
 			verticalArrangement = Arrangement.spacedBy(8.dp),
 		) {
-			item {
-				Header(vm)
-			}
-
 			vm.songs.forEach { group ->
 				item(key = group.date.toString(), contentType = "separator") {
 					Text(
@@ -144,25 +152,6 @@ private fun Content(vm: RecentLikeViewModel) {
 			}
 
 			listTailSpacerItem()
-		}
-	}
-}
-
-@Composable
-private fun Header(vm: RecentLikeViewModel) {
-	Row(
-		modifier = Modifier.fillMaxWidth(),
-		verticalAlignment = Alignment.CenterVertically,
-	) {
-		Text(
-			text = stringResource(Res.string.nav_recent_like),
-			style = MaterialTheme.typography.titleLarge,
-		)
-		Spacer(Modifier.weight(1f))
-		Button(onClick = { vm.playAllLoaded() }) {
-			Icon(Icons.Default.PlayArrow, contentDescription = stringResource(Res.string.common_play_cd))
-			Spacer(Modifier.size(8.dp))
-			Text(stringResource(Res.string.play_all))
 		}
 	}
 }

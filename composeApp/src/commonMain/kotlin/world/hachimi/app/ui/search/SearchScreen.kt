@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,7 +20,6 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Sort
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
@@ -50,6 +48,7 @@ import world.hachimi.app.nav.LocalNavigator
 import world.hachimi.app.nav.Route
 import world.hachimi.app.ui.LocalContentInsets
 import world.hachimi.app.ui.component.LoadingPage
+import world.hachimi.app.ui.component.ScreenScaffold
 import world.hachimi.app.ui.design.components.AccentButton
 import world.hachimi.app.ui.design.components.Button
 import world.hachimi.app.ui.design.components.DropdownMenu
@@ -77,11 +76,21 @@ fun SearchScreen(
         }
     }
 
-    AnimatedContent(
-        targetState = vm.loading,
-        transitionSpec = { materialFadeThrough() }
-    ) { loading ->
-        if (loading) LoadingPage() else Content(vm, global, navigator)
+    ScreenScaffold(
+        title = { Text(stringResource(Res.string.search_result_title), maxLines = 1) },
+        subtitle = if (!vm.loading) {
+            { Text("${vm.searchProcessingTimeMs} ms", maxLines = 1) }
+        } else null,
+        showBack = true,
+        onBack = navigator::back,
+    ) {
+        AnimatedContent(
+            targetState = vm.loading,
+            modifier = Modifier.fillMaxSize(),
+            transitionSpec = { materialFadeThrough() }
+        ) { loading ->
+            if (loading) LoadingPage() else Content(vm, global, navigator)
+        }
     }
 }
 
@@ -96,10 +105,6 @@ private fun Content(vm: SearchViewModel, global: GlobalStore, navigator: world.h
             horizontalArrangement = Arrangement.spacedBy(AdaptiveListSpacing),
             verticalArrangement = Arrangement.spacedBy(AdaptiveListSpacing)
         ) {
-            item(span = { GridItemSpan(maxLineSpan) }) {
-                Header(vm.searchProcessingTimeMs)
-            }
-
             item(span = { GridItemSpan(maxLineSpan) }) {
                 Tab(
                     searchType = vm.searchType,
@@ -180,21 +185,6 @@ private fun Content(vm: SearchViewModel, global: GlobalStore, navigator: world.h
                 )
             }
         }
-    }
-}
-
-@Composable
-private fun Header(processTimeMillis: Long) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        Text(
-            text = stringResource(Res.string.search_result_title),
-            style = MaterialTheme.typography.titleLarge
-        )
-        Spacer(Modifier.width(8.dp))
-        Text(
-            text = "$processTimeMillis ms",
-            style = MaterialTheme.typography.bodySmall,
-        )
     }
 }
 

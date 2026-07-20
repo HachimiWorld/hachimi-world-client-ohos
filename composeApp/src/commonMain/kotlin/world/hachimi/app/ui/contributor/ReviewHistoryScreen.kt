@@ -35,6 +35,7 @@ import world.hachimi.app.ui.LocalContentInsets
 import world.hachimi.app.ui.component.LoadingPage
 import world.hachimi.app.ui.component.Pagination
 import world.hachimi.app.ui.component.ReloadPage
+import world.hachimi.app.ui.component.ScreenScaffold
 import world.hachimi.app.ui.design.components.Card
 import world.hachimi.app.ui.design.components.CircularProgressIndicator
 import world.hachimi.app.ui.design.components.Text
@@ -55,11 +56,17 @@ fun ReviewHistoryScreen(
         onDispose { vm.dispose() }
     }
 
-    AnimatedContent(vm.initializeStatus, modifier = Modifier.fillMaxSize()) { status ->
-        when (status) {
-            InitializeStatus.INIT -> LoadingPage()
-            InitializeStatus.FAILED -> ReloadPage(onReloadClick = { vm.retry() })
-            InitializeStatus.LOADED -> Content(vm = vm, global = global, navigator = navigator)
+    ScreenScaffold(
+        title = { Text(stringResource(Res.string.review_history_title), maxLines = 1) },
+        showBack = true,
+        onBack = navigator::back,
+    ) {
+        AnimatedContent(vm.initializeStatus, modifier = Modifier.fillMaxSize()) { status ->
+            when (status) {
+                InitializeStatus.INIT -> LoadingPage()
+                InitializeStatus.FAILED -> ReloadPage(onReloadClick = { vm.retry() })
+                InitializeStatus.LOADED -> Content(vm = vm, global = global, navigator = navigator)
+            }
         }
     }
 }
@@ -77,12 +84,6 @@ private fun Content(
             .padding(vertical = 24.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Text(
-            modifier = Modifier.padding(horizontal = AdaptiveScreenMargin).fillMaxWidthIn(),
-            text = stringResource(Res.string.review_history_title),
-            style = MaterialTheme.typography.titleLarge
-        )
-
         Box(Modifier.weight(1f)) {
             if (vm.items.isEmpty() && !vm.loading) {
                 Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {

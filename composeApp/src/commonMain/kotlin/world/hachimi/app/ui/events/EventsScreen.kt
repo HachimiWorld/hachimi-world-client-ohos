@@ -44,7 +44,10 @@ import coil3.compose.rememberAsyncImagePainter
 import coil3.network.httpHeaders
 import coil3.request.ImageRequest
 import coil3.request.crossfade
+import hachimiworld.composeapp.generated.resources.Res
+import hachimiworld.composeapp.generated.resources.nav_home_events
 import kotlinx.datetime.LocalDateTime
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import world.hachimi.app.api.CoilHeaders
@@ -59,6 +62,7 @@ import world.hachimi.app.ui.LocalContentInsets
 import world.hachimi.app.ui.component.LoadMoreItem
 import world.hachimi.app.ui.component.LoadingPage
 import world.hachimi.app.ui.component.ReloadPage
+import world.hachimi.app.ui.component.ScreenScaffold
 import world.hachimi.app.ui.design.components.ElevatedCard
 import world.hachimi.app.ui.design.components.LocalContentColor
 import world.hachimi.app.ui.design.components.Text
@@ -83,11 +87,15 @@ fun EventsScreen(
         onDispose { vm.dispose() }
     }
 
-    AnimatedContent(vm.initializeStatus) {
-        when (it) {
-            InitializeStatus.INIT -> LoadingPage()
-            InitializeStatus.FAILED -> ReloadPage(onReloadClick = { vm.retry() })
-            InitializeStatus.LOADED -> EventsContent(global, navigator, vm)
+    ScreenScaffold(
+        title = { Text(stringResource(Res.string.nav_home_events), maxLines = 1) },
+    ) {
+        AnimatedContent(vm.initializeStatus, modifier = Modifier.fillMaxSize()) {
+            when (it) {
+                InitializeStatus.INIT -> LoadingPage()
+                InitializeStatus.FAILED -> ReloadPage(onReloadClick = { vm.retry() })
+                InitializeStatus.LOADED -> EventsContent(global, navigator, vm)
+            }
         }
     }
 }
@@ -125,10 +133,6 @@ private fun EventsListCompact(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             contentPadding = PaddingValues(24.dp)
         ) {
-            item {
-                Text("活动公告", style = MaterialTheme.typography.titleLarge)
-            }
-
             if (vm.items.isEmpty() && !vm.loading) {
                 item {
                     Box(
@@ -192,10 +196,6 @@ private fun EventsGridExpanded(
             verticalArrangement = Arrangement.spacedBy(spacing)
         ) {
             val maxLineSpan = if (maxWidth >= 1040.dp) 3 else 2
-
-            item(span = { GridItemSpan(maxLineSpan) }) {
-                Text("活动公告", style = MaterialTheme.typography.titleLarge)
-            }
 
             if (vm.items.isEmpty()) {
                 item(span = { GridItemSpan(maxLineSpan) }) {
