@@ -75,9 +75,9 @@ import world.hachimi.app.ui.home.WeeklyHotScreen
 import world.hachimi.app.ui.insets.LocalSafeAreaInsets
 import world.hachimi.app.ui.insets.currentSafeAreaInsets
 import world.hachimi.app.ui.likes.RecentLikeScreen
-import world.hachimi.app.ui.player.footer.CompactFooterHeight
-import world.hachimi.app.ui.player.footer.CompactFooterPlayer2
-import world.hachimi.app.ui.player.footer.ExpandedFooterPlayer2
+import world.hachimi.app.ui.player.miniplayer.CompactFooterHeight
+import world.hachimi.app.ui.player.miniplayer.CompactMiniPlayer
+import world.hachimi.app.ui.player.miniplayer.ExpandedMiniPlayer
 import world.hachimi.app.ui.playlist.PlaylistDetailScreen
 import world.hachimi.app.ui.playlist.PlaylistScreen
 import world.hachimi.app.ui.playlist.PublicPlaylistScreen
@@ -383,7 +383,7 @@ private fun CompactScreen(
                 }
             }
 
-            CompactFooterPlayer2(
+            CompactMiniPlayer(
                 modifier = Modifier
                     .fillMaxSize()
                     .wrapContentHeight(align = Alignment.Bottom)
@@ -421,7 +421,7 @@ private fun ExpandedScreen(
             }
         },
         footerPlayer = {
-            ExpandedFooterPlayer2(
+            ExpandedMiniPlayer(
                 Modifier.wrapContentHeight(Alignment.Bottom).padding(
                     start = 24.dp,
                     end = 24.dp,

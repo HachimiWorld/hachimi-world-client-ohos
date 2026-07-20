@@ -1,10 +1,17 @@
-package world.hachimi.app.ui.player.footer
+package world.hachimi.app.ui.player.miniplayer
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterExitState
 import androidx.compose.animation.core.animateDp
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.SkipNext
@@ -39,15 +46,19 @@ import world.hachimi.app.ui.LocalSharedTransitionScope
 import world.hachimi.app.ui.SharedTransitionKeys
 import world.hachimi.app.ui.design.HachimiTheme
 import world.hachimi.app.ui.design.components.Button
-import world.hachimi.app.ui.player.footer.components.*
 import world.hachimi.app.ui.player.fullscreen.components.FullScreenCoverCornerRadius
+import world.hachimi.app.ui.player.miniplayer.components.Author
+import world.hachimi.app.ui.player.miniplayer.components.Container
+import world.hachimi.app.ui.player.miniplayer.components.PlayPauseButton
+import world.hachimi.app.ui.player.miniplayer.components.PlayPauseStatus
+import world.hachimi.app.ui.player.miniplayer.components.Title
 import world.hachimi.app.ui.theme.PreviewTheme
 
 
 val CompactFooterHeight = 48.dp + 16.dp
 
 @Composable
-fun CompactFooterPlayer2(
+fun CompactMiniPlayer(
     modifier: Modifier = Modifier,
     hazeState: HazeState,
     vm: PlayerViewModel = koinViewModel(),
