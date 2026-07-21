@@ -49,42 +49,42 @@ fun PublicPlaylistScreen(
         showBack = true,
         onBack = navigator::back,
     ) {
-    InitStatusScaffold(
-        initializeStatus = vm.initStatus,
-        isLoading = vm.loading,
-        onRetryClick = { vm.retry() },
-    ) {
-        Box(Modifier.fillMaxSize()) {
-            val playlistInfo = vm.playlistInfo
-            val userInfo = vm.creatorProfile
-            if (playlistInfo != null && userInfo != null) LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(AdaptiveScreenMargin),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                listHeadInsetsSpacerItem()
-                item {
-                    Header(vm)
-                }
+        InitStatusScaffold(
+            initializeStatus = vm.initStatus,
+            isLoading = vm.loading,
+            onRetryClick = { vm.retry() },
+        ) {
+            Box(Modifier.fillMaxSize()) {
+                val playlistInfo = vm.playlistInfo
+                val userInfo = vm.creatorProfile
+                if (playlistInfo != null && userInfo != null) LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(AdaptiveScreenMargin),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    listHeadInsetsSpacerItem()
+                    item {
+                        Header(vm)
+                    }
 
-                itemsIndexed(vm.songs, key = { _, item -> item.songId }) { index, song ->
-                    SongItem(
-                        modifier = Modifier.fillMaxWidthIn(),
-                        orderIndex = index,
-                        title = song.title,
-                        onClick = { vm.play(song) },
-                        coverUrl = song.coverUrl,
-                        artist = song.uploaderName,
-                        duration = song.durationSeconds.seconds,
-                        editable = false,
-                        onRemoveClick = {}
-                    )
-                }
+                    itemsIndexed(vm.songs, key = { _, item -> item.songId }) { index, song ->
+                        SongItem(
+                            modifier = Modifier.fillMaxWidthIn(),
+                            orderIndex = index,
+                            title = song.title,
+                            onClick = { vm.play(song) },
+                            coverUrl = song.coverUrl,
+                            artist = song.uploaderName,
+                            duration = song.durationSeconds.seconds,
+                            editable = false,
+                            onRemoveClick = {}
+                        )
+                    }
 
-                listTailSpacerItem()
+                    listTailSpacerItem()
+                }
             }
         }
-    }
     }
 }
 

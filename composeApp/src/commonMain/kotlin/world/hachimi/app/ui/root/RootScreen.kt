@@ -74,8 +74,8 @@ import world.hachimi.app.ui.home.HomeMainScreen
 import world.hachimi.app.ui.home.RecentPublishScreen
 import world.hachimi.app.ui.home.RecommendScreen
 import world.hachimi.app.ui.home.WeeklyHotScreen
+import world.hachimi.app.ui.insets.multiplatformStatusBars
 import world.hachimi.app.ui.insets.multiplatformStatusBarsPadding
-import world.hachimi.app.ui.insets.multiplatformSystemBars
 import world.hachimi.app.ui.insets.multiplatformSystemBarsPadding
 import world.hachimi.app.ui.likes.RecentLikeScreen
 import world.hachimi.app.ui.player.miniplayer.CompactFooterHeight
@@ -381,7 +381,7 @@ private fun CompactScreen(
                                 Box(
                                     Modifier
                                         .weight(1f)
-                                        .consumeWindowInsets(WindowInsets.multiplatformSystemBars)
+                                        .consumeWindowInsets(WindowInsets.multiplatformStatusBars)
                                 ) {
                                     primaryContent()
                                 }

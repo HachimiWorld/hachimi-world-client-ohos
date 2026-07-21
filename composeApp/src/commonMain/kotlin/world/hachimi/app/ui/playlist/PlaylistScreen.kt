@@ -25,6 +25,7 @@ import world.hachimi.app.nav.Navigator
 import world.hachimi.app.nav.Route
 import world.hachimi.app.ui.design.components.Text
 import world.hachimi.app.ui.insets.multiplatformStatusBarsPadding
+import world.hachimi.app.ui.insets.multiplatformSystemBarsPadding
 import world.hachimi.app.ui.playlist.components.FavoritePlaylistItem
 import world.hachimi.app.ui.playlist.components.PlaylistItem
 import world.hachimi.app.ui.util.AdaptiveListSpacing
@@ -62,7 +63,7 @@ private fun Content(vm: PlaylistViewModel, navigator: Navigator) {
         Text(stringResource(Res.string.playlist_empty))
     } else BoxWithConstraints {
         LazyVerticalGrid(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize().multiplatformSystemBarsPadding(),
             columns = calculateGridColumns(maxWidth),
             contentPadding = contentPaddingForMaxWidth(PaddingValues(AdaptiveScreenMargin), maxWidth),
             verticalArrangement = Arrangement.spacedBy(AdaptiveListSpacing),
