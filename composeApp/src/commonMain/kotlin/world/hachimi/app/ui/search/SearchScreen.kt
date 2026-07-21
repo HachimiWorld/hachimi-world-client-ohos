@@ -4,12 +4,13 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -43,21 +44,21 @@ import world.hachimi.app.model.GlobalStore
 import world.hachimi.app.model.SearchViewModel
 import world.hachimi.app.model.fromSearchSongItem
 import world.hachimi.app.nav.LocalNavigator
+import world.hachimi.app.nav.Navigator
 import world.hachimi.app.nav.Route
 import world.hachimi.app.ui.component.LoadingPage
 import world.hachimi.app.ui.component.ScreenScaffold
-import world.hachimi.app.ui.design.components.AccentButton
 import world.hachimi.app.ui.design.components.Button
 import world.hachimi.app.ui.design.components.DropdownMenu
 import world.hachimi.app.ui.design.components.DropdownMenuItem
 import world.hachimi.app.ui.design.components.Icon
+import world.hachimi.app.ui.design.components.TabBar
 import world.hachimi.app.ui.design.components.Text
 import world.hachimi.app.ui.search.components.SearchPlaylistItem
 import world.hachimi.app.ui.search.components.SearchSongItem
 import world.hachimi.app.ui.search.components.SearchUserItem
 import world.hachimi.app.ui.util.AdaptiveListSpacing
 import world.hachimi.app.ui.util.contentPaddingForMaxWidth
-import world.hachimi.app.ui.util.listHeadInsetsSpacerItem
 import world.hachimi.app.ui.util.listTailSpacerItem
 
 @Composable
@@ -94,7 +95,7 @@ fun SearchScreen(
 }
 
 @Composable
-private fun Content(vm: SearchViewModel, global: GlobalStore, navigator: world.hachimi.app.nav.Navigator) {
+private fun Content(vm: SearchViewModel, global: GlobalStore, navigator: Navigator) {
     BoxWithConstraints {
         LazyVerticalGrid(
             modifier = Modifier.fillMaxSize(),
@@ -104,13 +105,13 @@ private fun Content(vm: SearchViewModel, global: GlobalStore, navigator: world.h
             horizontalArrangement = Arrangement.spacedBy(AdaptiveListSpacing),
             verticalArrangement = Arrangement.spacedBy(AdaptiveListSpacing)
         ) {
-            listHeadInsetsSpacerItem()
             item(span = { GridItemSpan(maxLineSpan) }) {
                 Tab(
                     searchType = vm.searchType,
                     onTypeChange = { vm.updateSearchType(it) },
                     sortMethod = vm.songSortMethod,
-                    onSortMethodChange = { vm.updateSortMethod(it) }
+                    onSortMethodChange = { vm.updateSortMethod(it) },
+                    modifier = Modifier.fillMaxWidth().statusBarsPadding()
                 )
             }
 
@@ -130,52 +131,53 @@ private fun Content(vm: SearchViewModel, global: GlobalStore, navigator: world.h
                 }
             }
 
-            if (vm.searchType == SearchViewModel.SearchType.SONG) items(
-                items = vm.songData,
-                key = { item -> item.info.id },
-                contentType = { _ -> "song" }
-            ) { item ->
-                SearchSongItem(
-                    modifier = Modifier.fillMaxWidth(),
-                    data = item,
-                    onClick = {
-                        global.player.insertToQueue(
-                            GlobalStore.MusicQueueItem.fromSearchSongItem(item.info),
-                            true,
-                            false
-                        )
-                    }
-                )
-            }
-
-            if (vm.searchType == SearchViewModel.SearchType.USER) items(
-                items = vm.userData,
-                key = { item -> item.uid },
-                contentType = { _ -> "user" }
-            ) { item ->
-                SearchUserItem(
-                    modifier = Modifier.fillMaxWidth(),
-                    name = item.username,
-                    avatarUrl = item.avatarUrl,
-                    onClick = { navigator.push(Route.Root.PublicUserSpace(item.uid)) },
-                )
-            }
-
-            if (vm.searchType == SearchViewModel.SearchType.PLAYLIST) items(
-                items = vm.playlistData,
-                key = { it.id },
-                contentType = { _ -> "playlist" }
-            ) { item ->
-                SearchPlaylistItem(
-                    modifier = Modifier.fillMaxWidth(),
-                    title = item.name,
-                    username = item.userName,
-                    coverUrl = item.coverUrl,
-                    avatarUrl = item.userAvatarUrl,
-                    songCount = item.songsCount,
-                    onClick = { navigator.push(Route.Root.PublicPlaylist(item.id)) },
-                    description = item.description
-                )
+            when (vm.searchType) {
+                SearchViewModel.SearchType.SONG -> items(
+                    items = vm.songData,
+                    key = { item -> item.info.id },
+                    contentType = { _ -> "song" }
+                ) { item ->
+                    SearchSongItem(
+                        modifier = Modifier.fillMaxWidth(),
+                        data = item,
+                        onClick = {
+                            global.player.insertToQueue(
+                                GlobalStore.MusicQueueItem.fromSearchSongItem(item.info),
+                                true,
+                                false
+                            )
+                        }
+                    )
+                }
+                SearchViewModel.SearchType.USER -> items(
+                    items = vm.userData,
+                    key = { item -> item.uid },
+                    contentType = { _ -> "user" }
+                ) { item ->
+                    SearchUserItem(
+                        modifier = Modifier.fillMaxWidth(),
+                        name = item.username,
+                        avatarUrl = item.avatarUrl,
+                        onClick = { navigator.push(Route.Root.PublicUserSpace(item.uid)) },
+                    )
+                }
+                SearchViewModel.SearchType.ALBUM -> {}
+                SearchViewModel.SearchType.PLAYLIST -> items(
+                    items = vm.playlistData,
+                    key = { it.id },
+                    contentType = { _ -> "playlist" }
+                ) { item ->
+                    SearchPlaylistItem(
+                        modifier = Modifier.fillMaxWidth(),
+                        title = item.name,
+                        username = item.userName,
+                        coverUrl = item.coverUrl,
+                        avatarUrl = item.userAvatarUrl,
+                        songCount = item.songsCount,
+                        onClick = { navigator.push(Route.Root.PublicPlaylist(item.id)) },
+                        description = item.description
+                    )
+                }
             }
 
             listTailSpacerItem()
@@ -197,20 +199,22 @@ private fun Tab(
     searchType: SearchViewModel.SearchType,
     onTypeChange: (SearchViewModel.SearchType) -> Unit,
     sortMethod: SearchViewModel.SortMethod,
-    onSortMethodChange: (SearchViewModel.SortMethod) -> Unit
+    onSortMethodChange: (SearchViewModel.SortMethod) -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    FlowRow(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+    val selectedIndex = Tabs.entries.indexOfFirst { it.type == searchType }.coerceAtLeast(0)
+    val tabLabels = Tabs.entries.map { stringResource(it.label) }
+
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically,
     ) {
-        Tabs.entries.fastForEach {
-            if (searchType == it.type) AccentButton(onClick = {}) {
-                Text(stringResource(it.label))
-            } else Button(onClick = { onTypeChange(it.type) }) {
-                Text(stringResource(it.label))
-            }
-        }
+        TabBar(
+            tabs = tabLabels,
+            selectedIndex = selectedIndex,
+            onTabSelected = { index -> onTypeChange(Tabs.entries[index].type) },
+            maxLines = 1,
+        )
 
         if (searchType == SearchViewModel.SearchType.SONG) {
             var expanded by remember { mutableStateOf(false) }
