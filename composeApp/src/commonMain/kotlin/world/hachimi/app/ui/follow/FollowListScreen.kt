@@ -6,12 +6,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
@@ -42,7 +38,6 @@ import world.hachimi.app.model.FollowListType
 import world.hachimi.app.model.FollowViewModel
 import world.hachimi.app.model.InitializeStatus
 import world.hachimi.app.nav.LocalNavigator
-import world.hachimi.app.ui.LocalContentInsets
 import world.hachimi.app.ui.LocalWindowSize
 import world.hachimi.app.ui.component.ScreenScaffold
 import world.hachimi.app.ui.design.components.Text
@@ -170,9 +165,7 @@ private fun FollowingList(
             if (vm.loadingMore) {
                 item(key = "loading_more") { BottomLoader() }
             }
-            item(key = "bottom_padding") {
-                Spacer(Modifier.height(96.dp).navigationBarsPadding().padding(LocalContentInsets.current.asPaddingValues()))
-            }
+            listTailSpacerItem()
         }
     } else {
         LazyColumn(
@@ -200,9 +193,7 @@ private fun FollowingList(
             if (vm.loadingMore) {
                 item(key = "loading_more") { BottomLoader() }
             }
-            item(key = "bottom_padding") {
-                Spacer(Modifier.height(96.dp).navigationBarsPadding().padding(LocalContentInsets.current.asPaddingValues()))
-            }
+            listTailSpacerItem()
         }
     }
 }

@@ -26,6 +26,7 @@ import world.hachimi.app.ui.util.AdaptiveScreenMargin
 import world.hachimi.app.ui.util.InitStatusScaffold
 import world.hachimi.app.ui.util.WindowSize
 import world.hachimi.app.ui.util.fillMaxWidthIn
+import world.hachimi.app.ui.util.listHeadInsetsSpacerItem
 import world.hachimi.app.ui.util.listTailSpacerItem
 import kotlin.time.Duration.Companion.seconds
 
@@ -61,6 +62,7 @@ fun PublicPlaylistScreen(
                 contentPadding = PaddingValues(AdaptiveScreenMargin),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
+                listHeadInsetsSpacerItem()
                 item {
                     Header(vm)
                 }

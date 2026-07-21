@@ -50,6 +50,7 @@ import world.hachimi.app.ui.util.AdaptiveScreenMargin
 import world.hachimi.app.ui.util.WindowSize
 import world.hachimi.app.ui.util.contentPaddingForMaxWidth
 import world.hachimi.app.ui.util.fadeInFadeOut
+import world.hachimi.app.ui.util.listHeadInsetsSpacerItem
 import world.hachimi.app.ui.util.listTailSpacerItem
 import kotlin.time.Duration.Companion.seconds
 
@@ -91,6 +92,7 @@ fun PlaylistDetailScreen(
                         ),
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
+                        listHeadInsetsSpacerItem()
                         item {
                             Header(global, info, vm)
                         }

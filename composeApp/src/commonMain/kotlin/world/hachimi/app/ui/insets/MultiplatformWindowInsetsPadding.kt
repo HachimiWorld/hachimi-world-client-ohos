@@ -11,6 +11,11 @@ fun Modifier.multiplatformSafeDrawingPadding(): Modifier = this.windowInsetsPadd
 )
 
 @Composable
+fun Modifier.multiplatformStatusBarsPadding(): Modifier = this.windowInsetsPadding(
+    WindowInsets.multiplatformStatusBars
+)
+
+@Composable
 fun Modifier.multiplatformSystemBarsPadding(): Modifier = this.windowInsetsPadding(
     WindowInsets.multiplatformSystemBars
 )

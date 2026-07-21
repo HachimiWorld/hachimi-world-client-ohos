@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.grid.GridItemSpan
@@ -121,7 +122,7 @@ fun UserSpaceScreen(
             horizontalArrangement = Arrangement.spacedBy(AdaptiveListSpacing),
         ) {
             item(span = { GridItemSpan(maxLineSpan) }) {
-                Header(vm, Modifier.fillMaxWidth())
+                Header(vm, Modifier.fillMaxWidth().statusBarsPadding())
             }
 
             item(span = { GridItemSpan(maxLineSpan) }) {

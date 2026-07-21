@@ -1,7 +1,6 @@
 package world.hachimi.app.ui.creation.artwork
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -12,8 +11,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import kotlinx.coroutines.launch
-import world.hachimi.app.ui.LocalContentInsets
 import world.hachimi.app.ui.design.components.TabBar
+import world.hachimi.app.ui.insets.multiplatformStatusBarsPadding
 import world.hachimi.app.ui.util.AdaptiveScreenMargin
 import world.hachimi.app.ui.util.fillMaxWidthIn
 
@@ -27,7 +26,7 @@ private enum class Tab(
 fun MyArtworkScreen() {
     val pagerState = rememberPagerState(pageCount = { Tab.entries.size })
 
-    Column(Modifier.fillMaxSize().fillMaxWidthIn()) {
+    Column(Modifier.fillMaxSize().fillMaxWidthIn().multiplatformStatusBarsPadding()) {
         val scope = rememberCoroutineScope()
 
         TabBar(
@@ -39,8 +38,7 @@ fun MyArtworkScreen() {
                 }
             },
             modifier = Modifier.padding(
-                top = AdaptiveScreenMargin +
-                    LocalContentInsets.current.asPaddingValues().calculateTopPadding(),
+                top = AdaptiveScreenMargin,
                 start = AdaptiveScreenMargin,
                 end = AdaptiveScreenMargin,
             ),

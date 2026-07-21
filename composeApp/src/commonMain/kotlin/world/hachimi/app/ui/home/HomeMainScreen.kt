@@ -14,11 +14,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -58,11 +56,9 @@ import world.hachimi.app.model.fromPublicDetail
 import world.hachimi.app.model.fromSearchSongItem
 import world.hachimi.app.nav.LocalNavigator
 import world.hachimi.app.nav.Route
-import world.hachimi.app.ui.LocalContentInsets
 import world.hachimi.app.ui.LocalWindowSize
 import world.hachimi.app.ui.component.LoadingPage
 import world.hachimi.app.ui.component.ReloadPage
-
 import world.hachimi.app.ui.design.components.Button
 import world.hachimi.app.ui.design.components.Icon
 import world.hachimi.app.ui.design.components.Text
@@ -73,7 +69,8 @@ import world.hachimi.app.ui.util.AdaptiveScreenMargin
 import world.hachimi.app.ui.util.WindowSize
 import world.hachimi.app.ui.util.fillMaxWidthIn
 import world.hachimi.app.ui.util.horizontalFadingEdges
-import world.hachimi.app.ui.util.withLocalContentInsets
+import world.hachimi.app.ui.util.listHeadInsetsSpacerItem
+import world.hachimi.app.ui.util.listTailSpacerItem
 
 @Composable
 fun HomeMainScreen(
@@ -94,30 +91,9 @@ fun HomeMainScreen(
     ) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(AdaptiveListSpacing),
-            contentPadding = PaddingValues(vertical = 16.dp).withLocalContentInsets(
-                includeTop = true,
-                includeBottom = false,
-            )
+            contentPadding = PaddingValues(vertical = 16.dp)
         ) {
-            /*if (vm.showClaims) item {
-                ElevatedCard(Modifier.fillMaxWidthIn().padding(horizontal = AdaptiveScreenMargin)) {
-                    Column(
-                        modifier = Modifier.padding(12.dp)
-                    ) {
-                        Text(
-                            text = "声明：hachimi.world 是基米天堂官方域名。我们是非营利的开源项目，与任何商业项目无关，与任何虚拟货币无关，请仔细甄别防止诈骗。本应用内的所有作品均由二创原作者发布。",
-                            fontSize = 14.sp,
-                        )
-                        HachimiIconButton(
-                            modifier = Modifier.align(Alignment.End),
-                            onClick = { vm.showClaims = false }
-                        ) {
-                            Icon(Icons.Default.Check, contentDescription = "Confirm")
-                        }
-                    }
-                }
-            }*/
+            listHeadInsetsSpacerItem()
             item(contentType = "recent_section") {
                 Segment(
                     modifier = Modifier.fillMaxWidthIn(),
@@ -134,7 +110,7 @@ fun HomeMainScreen(
 
             item(contentType = "recommend_section") {
                 Segment(
-                    modifier = Modifier.fillMaxWidthIn(),
+                    modifier = Modifier.fillMaxWidthIn().padding(top = AdaptiveListSpacing),
                     label = stringResource(Res.string.home_recommend_title),
                     status = vm.recommendStatus,
                     loading = vm.recommendLoading,
@@ -148,7 +124,7 @@ fun HomeMainScreen(
 
             item(contentType = "hot_section") {
                 Segment(
-                    modifier = Modifier.fillMaxWidthIn(),
+                    modifier = Modifier.fillMaxWidthIn().padding(top = AdaptiveListSpacing),
                     label = stringResource(Res.string.home_weekly_title),
                     status = vm.hotStatus,
                     loading = vm.hotLoading,
@@ -162,17 +138,12 @@ fun HomeMainScreen(
 
             items(vm.recommendTags, key = { it }, contentType = { "tag_section" }) { tag ->
                 CategorySegment(
-                    modifier = Modifier.fillMaxWidthIn(),
+                    modifier = Modifier.fillMaxWidthIn().padding(top = AdaptiveListSpacing),
                     category = tag
                 )
             }
 
-            item {
-                Spacer(
-                    Modifier.navigationBarsPadding()
-                        .padding(LocalContentInsets.current.asPaddingValues())
-                )
-            }
+            listTailSpacerItem()
         }
     }
 }

@@ -4,9 +4,7 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
@@ -23,15 +21,16 @@ import world.hachimi.app.model.InitializeStatus
 import world.hachimi.app.model.ReviewViewModel
 import world.hachimi.app.nav.HandleNavigationRequests
 import world.hachimi.app.nav.LocalNavigator
-import world.hachimi.app.ui.LocalContentInsets
 import world.hachimi.app.ui.component.Pagination
 import world.hachimi.app.ui.component.ReloadPage
 import world.hachimi.app.ui.component.ReviewItem
 import world.hachimi.app.ui.component.ScreenScaffold
 import world.hachimi.app.ui.design.components.CircularProgressIndicator
 import world.hachimi.app.ui.design.components.Text
+import world.hachimi.app.ui.insets.multiplatformStatusBarsPadding
 import world.hachimi.app.ui.util.AdaptiveScreenMargin
 import world.hachimi.app.ui.util.fillMaxWidthIn
+import world.hachimi.app.ui.util.listTailPadding
 
 @Composable
 fun ReviewListScreen(
@@ -81,8 +80,8 @@ private fun NotContributor() {
 private fun Content(vm: ReviewViewModel) {
     Column(
         Modifier.fillMaxSize()
-            .navigationBarsPadding()
-            .padding(LocalContentInsets.current.asPaddingValues())
+            .multiplatformStatusBarsPadding()
+            .listTailPadding()
             .padding(vertical = 24.dp),
         Arrangement.spacedBy(16.dp)
     ) {

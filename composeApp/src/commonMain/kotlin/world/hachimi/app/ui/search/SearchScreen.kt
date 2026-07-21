@@ -7,10 +7,8 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -46,7 +44,6 @@ import world.hachimi.app.model.SearchViewModel
 import world.hachimi.app.model.fromSearchSongItem
 import world.hachimi.app.nav.LocalNavigator
 import world.hachimi.app.nav.Route
-import world.hachimi.app.ui.LocalContentInsets
 import world.hachimi.app.ui.component.LoadingPage
 import world.hachimi.app.ui.component.ScreenScaffold
 import world.hachimi.app.ui.design.components.AccentButton
@@ -60,6 +57,8 @@ import world.hachimi.app.ui.search.components.SearchSongItem
 import world.hachimi.app.ui.search.components.SearchUserItem
 import world.hachimi.app.ui.util.AdaptiveListSpacing
 import world.hachimi.app.ui.util.contentPaddingForMaxWidth
+import world.hachimi.app.ui.util.listHeadInsetsSpacerItem
+import world.hachimi.app.ui.util.listTailSpacerItem
 
 @Composable
 fun SearchScreen(
@@ -105,6 +104,7 @@ private fun Content(vm: SearchViewModel, global: GlobalStore, navigator: world.h
             horizontalArrangement = Arrangement.spacedBy(AdaptiveListSpacing),
             verticalArrangement = Arrangement.spacedBy(AdaptiveListSpacing)
         ) {
+            listHeadInsetsSpacerItem()
             item(span = { GridItemSpan(maxLineSpan) }) {
                 Tab(
                     searchType = vm.searchType,
@@ -178,12 +178,7 @@ private fun Content(vm: SearchViewModel, global: GlobalStore, navigator: world.h
                 )
             }
 
-            item(span = { GridItemSpan(maxLineSpan) }) {
-                Spacer(
-                    Modifier.navigationBarsPadding()
-                        .padding(LocalContentInsets.current.asPaddingValues())
-                )
-            }
+            listTailSpacerItem()
         }
     }
 }

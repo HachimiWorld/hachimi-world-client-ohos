@@ -5,11 +5,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -68,7 +66,6 @@ import world.hachimi.app.model.GlobalStore
 import world.hachimi.app.model.Settings
 import world.hachimi.app.nav.LocalNavigator
 import world.hachimi.app.nav.Route
-import world.hachimi.app.ui.LocalContentInsets
 import world.hachimi.app.ui.component.ScreenScaffold
 import world.hachimi.app.ui.design.components.Card
 import world.hachimi.app.ui.design.components.Select
@@ -77,6 +74,7 @@ import world.hachimi.app.ui.design.components.Text
 import world.hachimi.app.ui.design.components.TextButton
 import world.hachimi.app.ui.util.AdaptiveScreenMargin
 import world.hachimi.app.ui.util.fillMaxWidthIn
+import world.hachimi.app.ui.util.listTailPadding
 
 @Composable
 fun SettingsScreen(
@@ -89,9 +87,9 @@ fun SettingsScreen(
         onBack = navigator::back,
     ) {
         Column(
-            Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(AdaptiveScreenMargin)
-                .navigationBarsPadding()
-                .padding(LocalContentInsets.current.asPaddingValues())
+            Modifier.fillMaxSize().verticalScroll(rememberScrollState())
+                .padding(AdaptiveScreenMargin)
+                .listTailPadding()
                 .fillMaxWidthIn(),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {

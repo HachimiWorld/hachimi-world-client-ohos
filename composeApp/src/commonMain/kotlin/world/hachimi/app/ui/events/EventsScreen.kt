@@ -63,8 +63,8 @@ import world.hachimi.app.ui.player.fullscreen.components.AmbientUserChip
 import world.hachimi.app.ui.theme.PreviewTheme
 import world.hachimi.app.ui.util.WindowSize
 import world.hachimi.app.ui.util.fillMaxWidthIn
+import world.hachimi.app.ui.util.listHeadInsetsSpacerItem
 import world.hachimi.app.ui.util.listTailSpacerItem
-import world.hachimi.app.ui.util.withLocalContentInsets
 import world.hachimi.app.util.YMD
 import world.hachimi.app.util.formatTime
 import kotlin.time.Clock
@@ -122,8 +122,9 @@ private fun EventsListCompact(
             state = listState,
             modifier = Modifier.fillMaxWidthIn(maxWidth = 380.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
-            contentPadding = PaddingValues(24.dp).withLocalContentInsets(includeTop = true, includeBottom = false)
+            contentPadding = PaddingValues(24.dp)
         ) {
+            listHeadInsetsSpacerItem()
             if (vm.items.isEmpty() && !vm.loading) {
                 item {
                     Box(
@@ -176,10 +177,11 @@ private fun EventsGridExpanded(
                 maxWidth = if (maxWidth >= 1040.dp) 1040.dp else WindowSize.MEDIUM
             ),
             columns = if (maxWidth >= 1040.dp) GridCells.Fixed(3) else GridCells.Fixed(2),
-            contentPadding = PaddingValues(24.dp).withLocalContentInsets(includeTop = true, includeBottom = false),
+            contentPadding = PaddingValues(24.dp),
             horizontalArrangement = Arrangement.spacedBy(spacing),
             verticalArrangement = Arrangement.spacedBy(spacing)
         ) {
+            listHeadInsetsSpacerItem()
             val maxLineSpan = if (maxWidth >= 1040.dp) 3 else 2
 
             if (vm.items.isEmpty()) {

@@ -4,7 +4,6 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -21,13 +20,13 @@ import world.hachimi.app.model.GlobalStore
 import world.hachimi.app.model.InitializeStatus
 import world.hachimi.app.nav.LocalNavigator
 import world.hachimi.app.nav.Route
-import world.hachimi.app.ui.LocalContentInsets
 import world.hachimi.app.ui.component.LoadingPage
 import world.hachimi.app.ui.component.NeedLoginScreen
 import world.hachimi.app.ui.component.ReloadPage
 import world.hachimi.app.ui.creation.publish.PublishScreen
 import world.hachimi.app.ui.design.components.Button
 import world.hachimi.app.ui.design.components.Text
+import world.hachimi.app.ui.insets.multiplatformStatusBarsPadding
 import world.hachimi.app.ui.util.AdaptiveScreenMargin
 import world.hachimi.app.ui.util.fillMaxWidthIn
 
@@ -100,7 +99,7 @@ private fun Content(
         modifier = Modifier
             .fillMaxSize()
             .fillMaxWidthIn()
-            .padding(top = LocalContentInsets.current.asPaddingValues().calculateTopPadding())
+            .multiplatformStatusBarsPadding()
             .padding(AdaptiveScreenMargin)
     ) {
         Text(

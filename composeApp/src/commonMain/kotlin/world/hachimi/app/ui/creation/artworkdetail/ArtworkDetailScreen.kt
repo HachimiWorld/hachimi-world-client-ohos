@@ -5,11 +5,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
@@ -37,7 +35,6 @@ import world.hachimi.app.model.GlobalStore
 import world.hachimi.app.model.InitializeStatus
 import world.hachimi.app.nav.LocalNavigator
 import world.hachimi.app.nav.Route
-import world.hachimi.app.ui.LocalContentInsets
 import world.hachimi.app.ui.component.DevelopingPage
 import world.hachimi.app.ui.component.LoadingPage
 import world.hachimi.app.ui.component.ReloadPage
@@ -54,6 +51,7 @@ import world.hachimi.app.ui.design.components.Text
 import world.hachimi.app.ui.design.components.TextButton
 import world.hachimi.app.ui.util.AdaptiveScreenMargin
 import world.hachimi.app.ui.util.fillMaxWidthIn
+import world.hachimi.app.ui.util.listTailPadding
 
 private enum class Tab(
     val title: String
@@ -83,8 +81,7 @@ fun ArtworkDetailScreen(
                 .fillMaxSize()
                 .fillMaxWidthIn()
                 .padding(AdaptiveScreenMargin)
-                .navigationBarsPadding()
-                .padding(LocalContentInsets.current.asPaddingValues())
+                .listTailPadding()
         ) {
             val pagerState = rememberPagerState(pageCount = { Tab.entries.size })
             val scope = rememberCoroutineScope()
@@ -141,12 +138,11 @@ private fun DetailContent(
     vm: ArtworkDetailViewModel,
     global: GlobalStore = koinInject()
 ) {
-    val navigator = world.hachimi.app.nav.LocalNavigator.current
+    val navigator = LocalNavigator.current
 
     Column(
         Modifier.fillMaxSize()
-            .navigationBarsPadding()
-            .padding(LocalContentInsets.current.asPaddingValues())
+            .listTailPadding()
             .padding(bottom = 24.dp),
         verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {

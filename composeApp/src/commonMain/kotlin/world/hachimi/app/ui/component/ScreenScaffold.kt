@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import world.hachimi.app.ui.LocalWindowSize
 import world.hachimi.app.ui.design.components.Text
-import world.hachimi.app.ui.insets.multiplatformSystemBars
+import world.hachimi.app.ui.insets.multiplatformStatusBars
 import world.hachimi.app.ui.theme.PreviewTheme
 import world.hachimi.app.ui.util.WindowSize
 import world.hachimi.app.util.PlatformBackHandler
@@ -52,7 +52,7 @@ fun ScreenScaffold(
             Modifier
                 .weight(1f)
                 .fillMaxSize()
-                .consumeWindowInsets(WindowInsets.multiplatformSystemBars)
+                .consumeWindowInsets(WindowInsets.multiplatformStatusBars)
         ) {
             content()
         }

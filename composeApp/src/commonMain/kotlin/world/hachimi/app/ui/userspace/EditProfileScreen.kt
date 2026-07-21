@@ -11,11 +11,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.layout.size
@@ -76,7 +74,7 @@ import soup.compose.material.motion.animation.materialFadeThrough
 import world.hachimi.app.api.CoilHeaders
 import world.hachimi.app.api.module.UserModule
 import world.hachimi.app.model.EditProfileViewModel
-import world.hachimi.app.ui.LocalContentInsets
+import world.hachimi.app.nav.LocalNavigator
 import world.hachimi.app.ui.component.ScreenScaffold
 import world.hachimi.app.ui.design.components.AccentButton
 import world.hachimi.app.ui.design.components.AlertDialog
@@ -91,7 +89,7 @@ import world.hachimi.app.ui.design.components.ToggleButton
 import world.hachimi.app.ui.util.AdaptiveScreenMargin
 import world.hachimi.app.ui.util.PlatformIcons
 import world.hachimi.app.ui.util.fillMaxWidthIn
-import world.hachimi.app.nav.LocalNavigator
+import world.hachimi.app.ui.util.listTailPadding
 
 @Composable
 fun EditProfileScreen(vm: EditProfileViewModel = koinViewModel()) {
@@ -104,7 +102,8 @@ fun EditProfileScreen(vm: EditProfileViewModel = koinViewModel()) {
     ) {
         Column(
             Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(AdaptiveScreenMargin)
-                .navigationBarsPadding().padding(LocalContentInsets.current.asPaddingValues()).fillMaxWidthIn(),
+                .listTailPadding()
+                .fillMaxWidthIn(),
             verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
             AnimatedContent(

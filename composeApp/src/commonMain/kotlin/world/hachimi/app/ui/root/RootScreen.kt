@@ -7,8 +7,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.consumeWindowInsets
@@ -16,10 +14,8 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DrawerState
@@ -78,7 +74,7 @@ import world.hachimi.app.ui.home.HomeMainScreen
 import world.hachimi.app.ui.home.RecentPublishScreen
 import world.hachimi.app.ui.home.RecommendScreen
 import world.hachimi.app.ui.home.WeeklyHotScreen
-import world.hachimi.app.ui.insets.multiplatformSafeDrawing
+import world.hachimi.app.ui.insets.multiplatformStatusBarsPadding
 import world.hachimi.app.ui.insets.multiplatformSystemBars
 import world.hachimi.app.ui.insets.multiplatformSystemBarsPadding
 import world.hachimi.app.ui.likes.RecentLikeScreen
@@ -361,8 +357,9 @@ private fun CompactScreen(
                     .background(HachimiTheme.colorScheme.background)
             ) {
                 CompositionLocalProvider(
-                    // Compact: AppBar owns status/safe top — never put top into LocalContentInsets
-                    // or lists will double-pad under the already-consumed TopAppBar.
+                    // LocalContentInsets = MiniPlayer bottom only.
+                    // Status top: listHeadInsetsSpacerItem / multiplatformStatusBarsPadding
+                    // (consumed under AppBar → 0).
                     LocalContentInsets provides WindowInsets(
                         bottom = CompactFooterHeight + 24.dp
                     ),
@@ -420,8 +417,8 @@ private fun ExpandedScreen(
             Column(
                 Modifier
                     .fillMaxHeight()
-                    .padding(start = 24.dp, top = 24.dp, bottom = 24.dp)
-                    .windowInsetsPadding(WindowInsets.multiplatformSystemBars)
+                    .multiplatformStatusBarsPadding()
+                    .padding(start = 24.dp, top = 4.dp, bottom = 24.dp)
             ) {
                 Logo()
                 ElevatedCard(Modifier.width(180.dp).weight(1f)) {
@@ -450,21 +447,12 @@ private fun ExpandedScreen(
                         end = contentPadding.calculateEndPadding(LocalLayoutDirection.current)
                     )
             ) {
-                // Expanded primary: no AppBar. Put remaining multiplatform top ONLY into
-                // LocalContentInsets for scroll contentPadding (edge-to-edge draw under chrome).
-                // Secondary: ScreenScaffold owns top → do not inject top here.
+                // LocalContentInsets = MiniPlayer bottom only.
+                // Status top: listHeadInsetsSpacerItem / multiplatformStatusBarsPadding
+                // (Compact AppBar consumes → 0; Expanded primary still sees remaining insets).
                 val footerBottom = contentPadding.calculateBottomPadding()
-                val primaryTop = if (navigator.isAtRootShell) {
-                    WindowInsets.multiplatformSafeDrawing
-                        .only(WindowInsetsSides.Top)
-                        .asPaddingValues()
-                        .calculateTopPadding()
-                } else {
-                    0.dp
-                }
                 CompositionLocalProvider(
                     LocalContentInsets provides WindowInsets(
-                        top = primaryTop,
                         bottom = footerBottom,
                     )
                 ) {
@@ -472,7 +460,7 @@ private fun ExpandedScreen(
                         global = global,
                         navigator = navigator,
                         shell = { primaryContent ->
-                            // Full-bleed; lists use contentPaddingForMaxWidth / withLocalContentInsets.
+                            // Full-bleed; lists use listHeadInsetsSpacerItem for safe top.
                             primaryContent()
                         },
                     )
