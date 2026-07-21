@@ -27,7 +27,6 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -56,7 +55,6 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import world.hachimi.app.api.module.UserModule
-import world.hachimi.app.model.FollowViewModel
 import world.hachimi.app.model.GlobalStore
 import world.hachimi.app.model.UserSpaceViewModel
 import world.hachimi.app.model.fromPublicDetail
@@ -284,17 +282,6 @@ private fun Header(
 ) {
     val navigator = LocalNavigator.current
     val isCompact = LocalWindowSize.current.width < WindowSize.COMPACT
-    val followVM: FollowViewModel = koinViewModel()
-
-    // When a follow/unfollow action completes, update the profile state locally
-    LaunchedEffect(followVM.lastActionResult) {
-        followVM.lastActionResult?.let { result ->
-            if (vm.profile?.uid == result.uid) {
-                vm.updateFollowState(result.isFollowing, result.followerCount)
-            }
-            followVM.consumeLastActionResult()
-        }
-    }
 
     Column(modifier, verticalArrangement = Arrangement.spacedBy(24.dp)) {
         HeaderProfileContent(
@@ -302,25 +289,26 @@ private fun Header(
             loading = vm.loadingProfile,
             isCompact = isCompact,
             myself = vm.myself,
-            followVM = followVM,
+            isFollowLoading = vm.followActionLoading,
+            onFollow = vm::follow,
+            onUnfollow = vm::showUnfollowDialog,
             navigator = navigator,
         )
     }
 
-    // Unfollow dialog - shown from profile page too
-    followVM.unfollowDialogTarget?.let { target ->
+    vm.unfollowDialogUsername?.let { username ->
         UnfollowDialog(
-            username = target.username,
+            username = username,
             subtitle = stringResource(Res.string.follow_unfollow_confirm_subtitle),
             confirmText = stringResource(Res.string.follow_unfollow_confirm),
             cancelText = stringResource(Res.string.follow_cancel),
             confirmTitle = stringResource(
                 Res.string.follow_unfollow_confirm_title,
-                target.username
+                username
             ),
-            loading = followVM.actionLoading,
-            onConfirm = { followVM.confirmUnfollow() },
-            onDismiss = { followVM.dismissUnfollowDialog() }
+            loading = vm.followActionLoading,
+            onConfirm = { vm.confirmUnfollow() },
+            onDismiss = { vm.dismissUnfollowDialog() }
         )
     }
 }
@@ -331,7 +319,9 @@ private fun HeaderProfileContent(
     loading: Boolean,
     isCompact: Boolean,
     myself: Boolean,
-    followVM: FollowViewModel,
+    isFollowLoading: Boolean,
+    onFollow: () -> Unit,
+    onUnfollow: () -> Unit,
     navigator: Navigator,
     modifier: Modifier = Modifier,
 ) {
@@ -398,30 +388,18 @@ private fun HeaderProfileContent(
             .padding(vertical = 8.dp)
             .then(if (isCompact) Modifier.fillMaxWidth() else Modifier.wrapContentWidth(align = Alignment.Start))
 
-        if (loading) {
-            StatsRow(
-                followerCount = 0,
-                followingCount = 0,
-                myself = myself,
-                isFollowing = false,
-                isFollowLoading = false,
-                onFollow = {},
-                onUnfollow = {},
-                onFollowersClick = {},
-                onFollowingClick = {},
-                modifier = statsModifier,
-            )
-        } else {
-            StatsRow(
-                profile = profile!!,
-                myself = myself,
-                isCompact = isCompact,
-                followVM = followVM,
-                onFollowersClick = { navigator.push(Route.Root.FollowersList) },
-                onFollowingClick = { navigator.push(Route.Root.FollowingList) },
-                modifier = statsModifier,
-            )
-        }
+        StatsRow(
+            followerCount = if (loading) 0 else profile!!.followerCount,
+            followingCount = if (loading) 0 else profile!!.followingCount,
+            myself = myself,
+            isFollowing = if (loading) false else profile!!.isFollowing,
+            isFollowLoading = isFollowLoading,
+            onFollow = onFollow,
+            onUnfollow = onUnfollow,
+            onFollowersClick = { navigator.push(Route.Root.FollowersList) },
+            onFollowingClick = { navigator.push(Route.Root.FollowingList) },
+            modifier = statsModifier,
+        )
 
         if (showConnections) {
             Connections(
