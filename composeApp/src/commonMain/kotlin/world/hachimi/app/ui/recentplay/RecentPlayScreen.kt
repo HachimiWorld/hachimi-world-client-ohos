@@ -35,7 +35,6 @@ import org.koin.compose.viewmodel.koinViewModel
 import world.hachimi.app.api.CoilHeaders
 import world.hachimi.app.model.RecentPlayViewModel
 import world.hachimi.app.ui.component.LoadMoreItem
-import world.hachimi.app.ui.component.ScreenScaffold
 import world.hachimi.app.ui.design.components.Surface
 import world.hachimi.app.ui.design.components.Text
 import world.hachimi.app.ui.theme.PreviewTheme
@@ -63,36 +62,39 @@ fun RecentPlayScreen(
         }
     }
 
-    ScreenScaffold(
-        title = { Text(stringResource(Res.string.recent_play_title), maxLines = 1) },
+    InitStatusScaffold(
+        initializeStatus = vm.initializeStatus,
+        isLoading = vm.refreshing,
+        onRetryClick = { vm.retry() },
+        modifier = Modifier.fillMaxSize()
     ) {
-        InitStatusScaffold(
-            initializeStatus = vm.initializeStatus,
-            isLoading = vm.refreshing,
-            onRetryClick = { vm.retry() },
-            modifier = Modifier.fillMaxSize()
-        ) {
-            BoxWithConstraints {
-                LazyColumn(
-                    state = state,
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = contentPaddingForMaxWidth(PaddingValues(AdaptiveScreenMargin), maxWidth)
-                ) {
-                    items(vm.history, key = { item -> item.songInfo.id }) { item ->
-                        RecentPlayItem(
-                            modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
-                            coverUrl = item.songInfo.coverUrl,
-                            title = item.songInfo.title,
-                            artist = item.songInfo.uploaderName,
-                            playTime = item.playTime,
-                            onPlayClick = { vm.play(item) }
-                        )
-                    }
-                    item {
-                        LoadMoreItem(hasMore = vm.hasMore, isLoading = vm.loadingMore)
-                    }
-                    listTailSpacerItem()
+        BoxWithConstraints {
+            LazyColumn(
+                state = state,
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = contentPaddingForMaxWidth(PaddingValues(AdaptiveScreenMargin), maxWidth)
+            ) {
+                item {
+                    Text(
+                        modifier = Modifier.padding(bottom = 12.dp),
+                        text = stringResource(Res.string.recent_play_title),
+                        style = MaterialTheme.typography.titleLarge,
+                    )
                 }
+                items(vm.history, key = { item -> item.songInfo.id }) { item ->
+                    RecentPlayItem(
+                        modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                        coverUrl = item.songInfo.coverUrl,
+                        title = item.songInfo.title,
+                        artist = item.songInfo.uploaderName,
+                        playTime = item.playTime,
+                        onPlayClick = { vm.play(item) }
+                    )
+                }
+                item {
+                    LoadMoreItem(hasMore = vm.hasMore, isLoading = vm.loadingMore)
+                }
+                listTailSpacerItem()
             }
         }
     }

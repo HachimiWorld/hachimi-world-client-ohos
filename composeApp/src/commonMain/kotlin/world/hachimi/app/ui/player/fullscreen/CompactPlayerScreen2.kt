@@ -80,7 +80,7 @@ import world.hachimi.app.ui.design.components.LocalContentColor
 import world.hachimi.app.ui.design.components.Surface
 import world.hachimi.app.ui.design.components.Text
 import world.hachimi.app.ui.design.components.ToggleButton
-import world.hachimi.app.ui.insets.currentSafeAreaInsets
+import world.hachimi.app.ui.insets.multiplatformSafeDrawingPadding
 import world.hachimi.app.ui.player.components.AddToPlaylistDialog
 import world.hachimi.app.ui.player.components.PlayerProgress
 import world.hachimi.app.ui.player.components.ShareDialog
@@ -112,11 +112,11 @@ fun CompactPlayerScreen2(
 
     Column(
         Modifier.fillMaxSize()
-            .padding(top = currentSafeAreaInsets().top, bottom = currentSafeAreaInsets().bottom)
+            .multiplatformSafeDrawingPadding()
             .padding(vertical = 24.dp)
     ) {
         HachimiIconButton(
-            modifier = Modifier.padding(start = 32.dp),
+            modifier = Modifier.padding(start = 16.dp),
             onClick = { global.shrinkPlayer() },
             touchMode = true
         ) {

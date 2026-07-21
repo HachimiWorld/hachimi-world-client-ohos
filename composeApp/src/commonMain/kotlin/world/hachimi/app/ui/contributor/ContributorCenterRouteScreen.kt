@@ -4,17 +4,16 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import hachimiworld.composeapp.generated.resources.Res
-import hachimiworld.composeapp.generated.resources.nav_contributor_center
-import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import world.hachimi.app.model.ContributorEntryViewModel
@@ -22,10 +21,10 @@ import world.hachimi.app.model.GlobalStore
 import world.hachimi.app.model.InitializeStatus
 import world.hachimi.app.nav.LocalNavigator
 import world.hachimi.app.nav.Route
+import world.hachimi.app.ui.LocalContentInsets
 import world.hachimi.app.ui.component.LoadingPage
 import world.hachimi.app.ui.component.NeedLoginScreen
 import world.hachimi.app.ui.component.ReloadPage
-import world.hachimi.app.ui.component.ScreenScaffold
 import world.hachimi.app.ui.creation.publish.PublishScreen
 import world.hachimi.app.ui.design.components.Button
 import world.hachimi.app.ui.design.components.Text
@@ -58,26 +57,22 @@ fun ContributorEntryScreen(
         onDispose { vm.dispose() }
     }
 
-    ScreenScaffold(
-        title = { Text(stringResource(Res.string.nav_contributor_center), maxLines = 1) },
-    ) {
-        AnimatedContent(
-            vm.initStat,
-            modifier = Modifier.fillMaxSize()
-        ) { status ->
-            when (status) {
-                InitializeStatus.INIT -> LoadingPage()
-                InitializeStatus.FAILED -> {
-                    // If user not logged in, show the login prompt
-                    if (!global.isLoggedIn) {
-                        NeedLoginScreen()
-                    } else {
-                        ReloadPage(onReloadClick = { vm.retry() })
-                    }
+    AnimatedContent(
+        vm.initStat,
+        modifier = Modifier.fillMaxSize()
+    ) { status ->
+        when (status) {
+            InitializeStatus.INIT -> LoadingPage()
+            InitializeStatus.FAILED -> {
+                // If user not logged in, show the login prompt
+                if (!global.isLoggedIn) {
+                    NeedLoginScreen()
+                } else {
+                    ReloadPage(onReloadClick = { vm.retry() })
                 }
-
-                InitializeStatus.LOADED -> Content(global, vm)
             }
+
+            InitializeStatus.LOADED -> Content(global, vm)
         }
     }
 }
@@ -102,8 +97,18 @@ private fun Content(
     }
 
     Column(
-        modifier = Modifier.fillMaxSize().fillMaxWidthIn().padding(AdaptiveScreenMargin)
+        modifier = Modifier
+            .fillMaxSize()
+            .fillMaxWidthIn()
+            .padding(top = LocalContentInsets.current.asPaddingValues().calculateTopPadding())
+            .padding(AdaptiveScreenMargin)
     ) {
+        Text(
+            text = "贡献者中心",
+            modifier = Modifier.padding(bottom = 16.dp),
+            style = MaterialTheme.typography.titleLarge,
+        )
+
         Button(
             onClick = { navigator.push(Route.Root.ContributorCenter.ReviewList) },
         ) {

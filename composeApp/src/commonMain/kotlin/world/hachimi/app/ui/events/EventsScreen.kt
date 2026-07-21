@@ -9,12 +9,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
@@ -44,10 +42,7 @@ import coil3.compose.rememberAsyncImagePainter
 import coil3.network.httpHeaders
 import coil3.request.ImageRequest
 import coil3.request.crossfade
-import hachimiworld.composeapp.generated.resources.Res
-import hachimiworld.composeapp.generated.resources.nav_home_events
 import kotlinx.datetime.LocalDateTime
-import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import world.hachimi.app.api.CoilHeaders
@@ -58,11 +53,9 @@ import world.hachimi.app.model.GlobalStore
 import world.hachimi.app.model.InitializeStatus
 import world.hachimi.app.nav.LocalNavigator
 import world.hachimi.app.nav.Route
-import world.hachimi.app.ui.LocalContentInsets
 import world.hachimi.app.ui.component.LoadMoreItem
 import world.hachimi.app.ui.component.LoadingPage
 import world.hachimi.app.ui.component.ReloadPage
-import world.hachimi.app.ui.component.ScreenScaffold
 import world.hachimi.app.ui.design.components.ElevatedCard
 import world.hachimi.app.ui.design.components.LocalContentColor
 import world.hachimi.app.ui.design.components.Text
@@ -70,6 +63,8 @@ import world.hachimi.app.ui.player.fullscreen.components.AmbientUserChip
 import world.hachimi.app.ui.theme.PreviewTheme
 import world.hachimi.app.ui.util.WindowSize
 import world.hachimi.app.ui.util.fillMaxWidthIn
+import world.hachimi.app.ui.util.listTailSpacerItem
+import world.hachimi.app.ui.util.withLocalContentInsets
 import world.hachimi.app.util.YMD
 import world.hachimi.app.util.formatTime
 import kotlin.time.Clock
@@ -87,15 +82,11 @@ fun EventsScreen(
         onDispose { vm.dispose() }
     }
 
-    ScreenScaffold(
-        title = { Text(stringResource(Res.string.nav_home_events), maxLines = 1) },
-    ) {
-        AnimatedContent(vm.initializeStatus, modifier = Modifier.fillMaxSize()) {
-            when (it) {
-                InitializeStatus.INIT -> LoadingPage()
-                InitializeStatus.FAILED -> ReloadPage(onReloadClick = { vm.retry() })
-                InitializeStatus.LOADED -> EventsContent(global, navigator, vm)
-            }
+    AnimatedContent(vm.initializeStatus, modifier = Modifier.fillMaxSize()) {
+        when (it) {
+            InitializeStatus.INIT -> LoadingPage()
+            InitializeStatus.FAILED -> ReloadPage(onReloadClick = { vm.retry() })
+            InitializeStatus.LOADED -> EventsContent(global, navigator, vm)
         }
     }
 }
@@ -131,7 +122,7 @@ private fun EventsListCompact(
             state = listState,
             modifier = Modifier.fillMaxWidthIn(maxWidth = 380.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
-            contentPadding = PaddingValues(24.dp)
+            contentPadding = PaddingValues(24.dp).withLocalContentInsets(includeTop = true, includeBottom = false)
         ) {
             if (vm.items.isEmpty() && !vm.loading) {
                 item {
@@ -154,13 +145,7 @@ private fun EventsListCompact(
                 }
             }
 
-            item {
-                Spacer(
-                    Modifier
-                        .navigationBarsPadding()
-                        .padding(LocalContentInsets.current.asPaddingValues())
-                )
-            }
+            listTailSpacerItem()
         }
     }
 }
@@ -191,7 +176,7 @@ private fun EventsGridExpanded(
                 maxWidth = if (maxWidth >= 1040.dp) 1040.dp else WindowSize.MEDIUM
             ),
             columns = if (maxWidth >= 1040.dp) GridCells.Fixed(3) else GridCells.Fixed(2),
-            contentPadding = PaddingValues(24.dp),
+            contentPadding = PaddingValues(24.dp).withLocalContentInsets(includeTop = true, includeBottom = false),
             horizontalArrangement = Arrangement.spacedBy(spacing),
             verticalArrangement = Arrangement.spacedBy(spacing)
         ) {
@@ -236,13 +221,7 @@ private fun EventsGridExpanded(
                 item(span = { GridItemSpan(maxLineSpan) }) {
                     LoadMoreItem(hasMore = !vm.noMoreData, isLoading = vm.loadingMore)
                 }
-                item(span = { GridItemSpan(maxLineSpan) }) {
-                    Spacer(
-                        Modifier
-                            .navigationBarsPadding()
-                            .padding(LocalContentInsets.current.asPaddingValues())
-                    )
-                }
+                listTailSpacerItem()
             }
         }
     }

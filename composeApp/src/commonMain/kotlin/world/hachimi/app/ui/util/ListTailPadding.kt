@@ -12,22 +12,25 @@ import androidx.compose.ui.Modifier
 import world.hachimi.app.ui.LocalContentInsets
 
 /**
- * Adds padding to the bottom of a list to account for navigation bars and content insets.
+ * Bottom-only padding for list tails (MiniPlayer / shell [LocalContentInsets]).
+ * Does not apply inset top — that belongs in scroll contentPadding so content can draw under chrome.
  */
 @Composable
-fun Modifier.listTailPadding(): Modifier =
-    this.navigationBarsPadding()
-        .padding(LocalContentInsets.current.asPaddingValues())
+fun Modifier.listTailPadding(): Modifier {
+    val bottom = LocalContentInsets.current.asPaddingValues().calculateBottomPadding()
+    return this.navigationBarsPadding().padding(bottom = bottom)
+}
 
 /**
  * Adds a spacer to the bottom of a list to account for navigation bars and content insets.
  */
 @Composable
 fun ListTailSpacer() {
+    val bottom = LocalContentInsets.current.asPaddingValues().calculateBottomPadding()
     Spacer(
         modifier = Modifier
             .navigationBarsPadding()
-            .padding(LocalContentInsets.current.asPaddingValues())
+            .padding(bottom = bottom)
     )
 }
 

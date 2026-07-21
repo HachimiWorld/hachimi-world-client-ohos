@@ -7,13 +7,19 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DrawerState
@@ -72,8 +78,9 @@ import world.hachimi.app.ui.home.HomeMainScreen
 import world.hachimi.app.ui.home.RecentPublishScreen
 import world.hachimi.app.ui.home.RecommendScreen
 import world.hachimi.app.ui.home.WeeklyHotScreen
-import world.hachimi.app.ui.insets.LocalSafeAreaInsets
-import world.hachimi.app.ui.insets.currentSafeAreaInsets
+import world.hachimi.app.ui.insets.multiplatformSafeDrawing
+import world.hachimi.app.ui.insets.multiplatformSystemBars
+import world.hachimi.app.ui.insets.multiplatformSystemBarsPadding
 import world.hachimi.app.ui.likes.RecentLikeScreen
 import world.hachimi.app.ui.player.miniplayer.CompactFooterHeight
 import world.hachimi.app.ui.player.miniplayer.CompactMiniPlayer
@@ -201,6 +208,7 @@ private fun PrimaryNavDisplay(global: GlobalStore, navigator: Navigator) {
 
 private fun primaryNavEntry(key: Route.Root, global: GlobalStore): NavEntry<Route.Root> =
     when (key) {
+        Route.Root.Events.Feed -> NavEntry(key) { EventsScreen() }
         Route.Root.Home.Main -> NavEntry(key) { HomeMainScreen() }
         Route.Root.RecentPlay -> NavEntry(key) {
             if (global.isLoggedIn) RecentPlayScreen() else NeedLoginScreen()
@@ -209,7 +217,7 @@ private fun primaryNavEntry(key: Route.Root, global: GlobalStore): NavEntry<Rout
             if (global.isLoggedIn) RecentLikeScreen() else NeedLoginScreen()
         }
         Route.Root.MySubscribe -> NavEntry(key) {
-            if (global.isLoggedIn) DevelopingPage() else NeedLoginScreen()
+            if (global.isLoggedIn) FollowListScreen(FollowListType.FOLLOWING) else NeedLoginScreen()
         }
         Route.Root.MyPlaylist.List -> NavEntry(key) {
             if (global.isLoggedIn) PlaylistScreen() else NeedLoginScreen()
@@ -234,7 +242,6 @@ private fun secondaryNavEntry(key: Route.Root, global: GlobalStore): NavEntry<Na
         Route.Root.Home.HiddenGem -> NavEntry(key) { DevelopingPage() }
         is Route.Root.Home.Category -> NavEntry(key) { CategorySongsScreen(key.category) }
 
-        Route.Root.Events.Feed -> NavEntry(key) { EventsScreen() }
         is Route.Root.Events.Detail -> NavEntry(key) { EventDetailScreen(key.postId) }
 
         is Route.Root.Search -> NavEntry(key) { SearchScreen(key.query, key.type) }
@@ -334,11 +341,7 @@ private fun CompactScreen(
                 color = HachimiTheme.colorScheme.surface.compositeOver(HachimiTheme.colorScheme.background),
                 shape = RoundedCornerShape(topEnd = 24.dp, bottomEnd = 24.dp),
             ) {
-                Column(
-                    Modifier
-                        .padding(top = currentSafeAreaInsets().top)
-                        .padding(bottom = currentSafeAreaInsets().bottom)
-                ) {
+                Column(Modifier.multiplatformSystemBarsPadding()) {
                     Logo(Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp))
                     Box(Modifier.padding(12.dp)) {
                         navigationContent(drawerState)
@@ -358,6 +361,8 @@ private fun CompactScreen(
                     .background(HachimiTheme.colorScheme.background)
             ) {
                 CompositionLocalProvider(
+                    // Compact: AppBar owns status/safe top — never put top into LocalContentInsets
+                    // or lists will double-pad under the already-consumed TopAppBar.
                     LocalContentInsets provides WindowInsets(
                         bottom = CompactFooterHeight + 24.dp
                     ),
@@ -374,7 +379,13 @@ private fun CompactScreen(
                                     global = global,
                                     onExpandNavClick = openDrawer,
                                 )
-                                Box(Modifier.weight(1f)) {
+                                // consume for *descendants* (not AppBar siblings): body must not
+                                // re-apply multiplatform top insets already handled by AppBar.
+                                Box(
+                                    Modifier
+                                        .weight(1f)
+                                        .consumeWindowInsets(WindowInsets.multiplatformSystemBars)
+                                ) {
                                     primaryContent()
                                 }
                             }
@@ -388,7 +399,7 @@ private fun CompactScreen(
                     .fillMaxSize()
                     .wrapContentHeight(align = Alignment.Bottom)
                     .padding(24.dp)
-                    .padding(bottom = currentSafeAreaInsets().bottom),
+                    .navigationBarsPadding(),
                 hazeState = hazeState,
             )
         }
@@ -410,7 +421,7 @@ private fun ExpandedScreen(
                 Modifier
                     .fillMaxHeight()
                     .padding(start = 24.dp, top = 24.dp, bottom = 24.dp)
-                    .padding(LocalSafeAreaInsets.current.top)
+                    .windowInsetsPadding(WindowInsets.multiplatformSystemBars)
             ) {
                 Logo()
                 ElevatedCard(Modifier.width(180.dp).weight(1f)) {
@@ -439,16 +450,29 @@ private fun ExpandedScreen(
                         end = contentPadding.calculateEndPadding(LocalLayoutDirection.current)
                     )
             ) {
+                // Expanded primary: no AppBar. Put remaining multiplatform top ONLY into
+                // LocalContentInsets for scroll contentPadding (edge-to-edge draw under chrome).
+                // Secondary: ScreenScaffold owns top → do not inject top here.
+                val footerBottom = contentPadding.calculateBottomPadding()
+                val primaryTop = if (navigator.isAtRootShell) {
+                    WindowInsets.multiplatformSafeDrawing
+                        .only(WindowInsetsSides.Top)
+                        .asPaddingValues()
+                        .calculateTopPadding()
+                } else {
+                    0.dp
+                }
                 CompositionLocalProvider(
                     LocalContentInsets provides WindowInsets(
-                        bottom = contentPadding.calculateBottomPadding()
+                        top = primaryTop,
+                        bottom = footerBottom,
                     )
                 ) {
-                    // Expanded: same nested NavDisplay; shell has no CompactTopAppBar
                     RootNavDisplay(
                         global = global,
                         navigator = navigator,
                         shell = { primaryContent ->
+                            // Full-bleed; lists use contentPaddingForMaxWidth / withLocalContentInsets.
                             primaryContent()
                         },
                     )

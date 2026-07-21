@@ -8,13 +8,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
@@ -34,7 +35,7 @@ import world.hachimi.app.ui.design.components.Icon
 import world.hachimi.app.ui.design.components.LocalContentColor
 import world.hachimi.app.ui.design.components.LocalTextStyle
 import world.hachimi.app.ui.design.components.Text
-import world.hachimi.app.ui.insets.currentSafeAreaInsets
+import world.hachimi.app.ui.insets.multiplatformSafeDrawing
 import world.hachimi.app.ui.theme.PreviewTheme
 import world.hachimi.app.ui.util.WindowSize
 
@@ -81,8 +82,7 @@ fun ScreenToolbar(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = currentSafeAreaInsets().top)
-                .consumeWindowInsets(WindowInsets.statusBars)
+                .windowInsetsPadding(WindowInsets.multiplatformSafeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top))
                 .defaultMinSize(minHeight = TopAppBarContainerHeight)
                 .height(TopAppBarContainerHeight)
                 .padding(horizontal = TopAppBarHorizontalPadding),

@@ -73,6 +73,7 @@ import world.hachimi.app.ui.util.AdaptiveScreenMargin
 import world.hachimi.app.ui.util.WindowSize
 import world.hachimi.app.ui.util.fillMaxWidthIn
 import world.hachimi.app.ui.util.horizontalFadingEdges
+import world.hachimi.app.ui.util.withLocalContentInsets
 
 @Composable
 fun HomeMainScreen(
@@ -94,7 +95,10 @@ fun HomeMainScreen(
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(AdaptiveListSpacing),
-            contentPadding = PaddingValues(vertical = 16.dp)
+            contentPadding = PaddingValues(vertical = 16.dp).withLocalContentInsets(
+                includeTop = true,
+                includeBottom = false,
+            )
         ) {
             /*if (vm.showClaims) item {
                 ElevatedCard(Modifier.fillMaxWidthIn().padding(horizontal = AdaptiveScreenMargin)) {

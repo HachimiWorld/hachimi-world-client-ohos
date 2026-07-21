@@ -4,6 +4,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -14,6 +16,7 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import world.hachimi.app.ui.LocalWindowSize
 import world.hachimi.app.ui.design.components.Text
+import world.hachimi.app.ui.insets.multiplatformSystemBars
 import world.hachimi.app.ui.theme.PreviewTheme
 import world.hachimi.app.ui.util.WindowSize
 import world.hachimi.app.util.PlatformBackHandler
@@ -44,7 +47,15 @@ fun ScreenScaffold(
             onMenuClick = onMenuClick,
             actions = actions,
         )
-        content()
+        // Toolbar applied multiplatform top insets; body must not re-apply them.
+        Column(
+            Modifier
+                .weight(1f)
+                .fillMaxSize()
+                .consumeWindowInsets(WindowInsets.multiplatformSystemBars)
+        ) {
+            content()
+        }
     }
 }
 

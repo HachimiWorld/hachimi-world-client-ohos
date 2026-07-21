@@ -28,7 +28,6 @@ import world.hachimi.app.nav.LocalNavigator
 import world.hachimi.app.nav.Navigator
 import world.hachimi.app.nav.Route
 import world.hachimi.app.ui.LocalContentInsets
-import world.hachimi.app.ui.component.ScreenScaffold
 import world.hachimi.app.ui.design.components.Text
 import world.hachimi.app.ui.playlist.components.FavoritePlaylistItem
 import world.hachimi.app.ui.playlist.components.PlaylistItem
@@ -45,16 +44,12 @@ fun PlaylistScreen(vm: PlaylistViewModel = koinViewModel()) {
         onDispose { vm.dispose() }
     }
     val navigator = LocalNavigator.current
-    ScreenScaffold(
-        title = { Text(stringResource(Res.string.playlist_my_playlists_title), maxLines = 1) },
+    InitStatusScaffold(
+        initializeStatus = vm.initializeStatus,
+        isLoading = vm.playlistIsLoading,
+        onRetryClick = { vm.retry() },
     ) {
-        InitStatusScaffold(
-            initializeStatus = vm.initializeStatus,
-            isLoading = vm.playlistIsLoading,
-            onRetryClick = { vm.retry() },
-        ) {
-            Content(vm, navigator)
-        }
+        Content(vm, navigator)
     }
 }
 
@@ -74,6 +69,14 @@ private fun Content(vm: PlaylistViewModel, navigator: Navigator) {
             verticalArrangement = Arrangement.spacedBy(AdaptiveListSpacing),
             horizontalArrangement = Arrangement.spacedBy(AdaptiveListSpacing)
         ) {
+            item(span = { GridItemSpan(maxLineSpan) }, contentType = "my-header") {
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = stringResource(Res.string.playlist_my_playlists_title),
+                    style = MaterialTheme.typography.titleLarge,
+                )
+            }
+
             items(vm.playlists, key = { item -> "my_${item.id}" }, contentType = { "my" }) { item ->
                 PlaylistItem(
                     modifier = Modifier.fillMaxWidth(),

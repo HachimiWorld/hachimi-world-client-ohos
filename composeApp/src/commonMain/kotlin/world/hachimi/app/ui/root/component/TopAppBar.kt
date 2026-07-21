@@ -6,13 +6,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -55,7 +56,7 @@ import world.hachimi.app.ui.design.components.LocalContentColor
 import world.hachimi.app.ui.design.components.SubtleButton
 import world.hachimi.app.ui.design.components.Surface
 import world.hachimi.app.ui.design.components.Text
-import world.hachimi.app.ui.insets.currentSafeAreaInsets
+import world.hachimi.app.ui.insets.multiplatformSafeDrawing
 
 @Composable
 fun CompactTopAppBar(
@@ -68,8 +69,7 @@ fun CompactTopAppBar(
     Surface(modifier.dropShadow(RectangleShape, CardShadow)) {
         Row(
             modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp)
-                .padding(top = currentSafeAreaInsets().top)
-                .consumeWindowInsets(WindowInsets.statusBars),
+                .windowInsetsPadding(WindowInsets.multiplatformSafeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top)),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             IconButton(onClick = onExpandNavClick) {
@@ -110,9 +110,8 @@ fun ExpandedTopAppBar(
     Surface(modifier.dropShadow(RectangleShape, CardShadow)) {
         Row(
             modifier = Modifier
-                .padding(top = currentSafeAreaInsets().top)
-                .padding(start = 24.dp, end = 24.dp, top = 8.dp, bottom = 8.dp)
-                .consumeWindowInsets(WindowInsets.statusBars),
+                .windowInsetsPadding(WindowInsets.multiplatformSafeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top))
+                .padding(start = 24.dp, end = 24.dp, top = 8.dp, bottom = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {

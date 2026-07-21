@@ -2,6 +2,7 @@ package world.hachimi.app.ui.util
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,6 +18,7 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import world.hachimi.app.ui.LocalContentInsets
 import world.hachimi.app.ui.LocalWindowSize
 
 fun Modifier.fillMaxWidthIn(
@@ -147,25 +149,57 @@ fun calculateGridColumns(maxWidth: Dp): GridCells = when {
 }
 
 /**
+ * Merge [LocalContentInsets] into scroll [PaddingValues].
+ *
+ * Prefer **contentPadding** (not clipping the viewport) so content can draw under StatusBar /
+ * chrome while the first items stay clear of the inset when scrolled to top.
+ *
+ * - [includeTop]: Expanded primary shell injects safe-area top here.
+ * - [includeBottom]: usually **false** — list tails use [listTailSpacerItem] for MiniPlayer instead.
+ */
+@Composable
+fun PaddingValues.withLocalContentInsets(
+    includeTop: Boolean = true,
+    includeBottom: Boolean = false,
+): PaddingValues {
+    val layoutDirection = LocalLayoutDirection.current
+    val insets = LocalContentInsets.current.asPaddingValues()
+    return PaddingValues(
+        start = calculateStartPadding(layoutDirection),
+        end = calculateEndPadding(layoutDirection),
+        top = calculateTopPadding() + if (includeTop) insets.calculateTopPadding() else 0.dp,
+        bottom = calculateBottomPadding() + if (includeBottom) insets.calculateBottomPadding() else 0.dp,
+    )
+}
+
+/**
  * Use `contentPadding` to limit the max width.
  * This is usually used in LazyColumn, because we need the scrolling detect area to be the full width.
  * If we use `Modifier.widthIn(max = maxWidth)`, the scrolling detect area will be limited to the max width, which is not what we want.
+ *
+ * Also merges [LocalContentInsets] **top** (safe area on Expanded primary) so titles clear the
+ * status bar without clipping the scroll viewport.
  */
 @Composable
 fun contentPaddingForMaxWidth(
     padding: PaddingValues,
     currentWidth: Dp,
-    maxWidth: Dp = 1280.dp
+    maxWidth: Dp = 1280.dp,
+    includeContentInsetsTop: Boolean = true,
 ): PaddingValues {
     val layoutDirection = LocalLayoutDirection.current
+    val withInsets = padding.withLocalContentInsets(
+        includeTop = includeContentInsetsTop,
+        includeBottom = false,
+    )
     return if (currentWidth > maxWidth) {
         PaddingValues(
-            start = padding.calculateStartPadding(layoutDirection) + (currentWidth - maxWidth) / 2,
-            end = padding.calculateEndPadding(layoutDirection) + (currentWidth - maxWidth) / 2,
-            top = padding.calculateTopPadding(),
-            bottom = padding.calculateBottomPadding()
+            start = withInsets.calculateStartPadding(layoutDirection) + (currentWidth - maxWidth) / 2,
+            end = withInsets.calculateEndPadding(layoutDirection) + (currentWidth - maxWidth) / 2,
+            top = withInsets.calculateTopPadding(),
+            bottom = withInsets.calculateBottomPadding()
         )
     } else {
-        padding
+        withInsets
     }
 }

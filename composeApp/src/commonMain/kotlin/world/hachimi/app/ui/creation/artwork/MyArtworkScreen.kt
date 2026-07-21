@@ -1,6 +1,7 @@
 package world.hachimi.app.ui.creation.artwork
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -10,13 +11,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
-import hachimiworld.composeapp.generated.resources.Res
-import hachimiworld.composeapp.generated.resources.nav_creation_center
 import kotlinx.coroutines.launch
-import org.jetbrains.compose.resources.stringResource
-import world.hachimi.app.ui.component.ScreenScaffold
+import world.hachimi.app.ui.LocalContentInsets
 import world.hachimi.app.ui.design.components.TabBar
-import world.hachimi.app.ui.design.components.Text
 import world.hachimi.app.ui.util.AdaptiveScreenMargin
 import world.hachimi.app.ui.util.fillMaxWidthIn
 
@@ -30,34 +27,31 @@ private enum class Tab(
 fun MyArtworkScreen() {
     val pagerState = rememberPagerState(pageCount = { Tab.entries.size })
 
-    ScreenScaffold(
-        title = { Text(stringResource(Res.string.nav_creation_center), maxLines = 1) },
-    ) {
-        Column(Modifier.fillMaxSize().fillMaxWidthIn()) {
-            val scope = rememberCoroutineScope()
+    Column(Modifier.fillMaxSize().fillMaxWidthIn()) {
+        val scope = rememberCoroutineScope()
 
-            TabBar(
-                tabs = Tab.entries.map { it.title },
-                selectedIndex = pagerState.currentPage,
-                onTabSelected = { index ->
-                    scope.launch {
-                        pagerState.animateScrollToPage(index)
-                    }
-                },
-                modifier = Modifier.padding(
-                    top = AdaptiveScreenMargin,
-                    start = AdaptiveScreenMargin,
-                    end = AdaptiveScreenMargin,
-                ),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
-
-            HorizontalPager(pagerState, modifier = Modifier.fillMaxWidth().weight(1f)) {
-                when (it) {
-                    0 -> PublishedTabContent()
-                    1 -> PRTabContent()
+        TabBar(
+            tabs = Tab.entries.map { it.title },
+            selectedIndex = pagerState.currentPage,
+            onTabSelected = { index ->
+                scope.launch {
+                    pagerState.animateScrollToPage(index)
                 }
+            },
+            modifier = Modifier.padding(
+                top = AdaptiveScreenMargin +
+                    LocalContentInsets.current.asPaddingValues().calculateTopPadding(),
+                start = AdaptiveScreenMargin,
+                end = AdaptiveScreenMargin,
+            ),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+        )
+
+        HorizontalPager(pagerState, modifier = Modifier.fillMaxWidth().weight(1f)) {
+            when (it) {
+                0 -> PublishedTabContent()
+                1 -> PRTabContent()
             }
         }
     }
