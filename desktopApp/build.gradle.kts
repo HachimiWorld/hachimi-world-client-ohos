@@ -49,14 +49,9 @@ dependencies {
     implementation(libs.koin.compose.viewmodel)
 //    implementation(libs.koin.compose.viewmodel.navigation)
 
-    implementation(libs.kotlinx.coroutines.swing)
-
     implementation(libs.ktor.client.cio)
-    implementation(libs.logback)
 
     implementation(libs.androidx.datastore.preferences)
-    implementation(libs.mp3spi)
-    implementation(libs.jflac)
 
     implementation(libs.jna)
     implementation(libs.jna.platform)

@@ -147,8 +147,6 @@ kotlin {
                 implementation(libs.androidx.datastore.preferences)
 //            implementation(libs.room.runtime)
 //            implementation(libs.androidx.sqlite.bundled)
-                implementation(libs.mp3spi)
-                implementation(libs.jflac)
 
                 implementation(libs.jna)
                 implementation(libs.jna.platform)
