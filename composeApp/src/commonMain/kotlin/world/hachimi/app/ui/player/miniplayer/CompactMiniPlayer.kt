@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
@@ -44,6 +45,7 @@ import world.hachimi.app.model.PlayerViewModel
 import world.hachimi.app.ui.LocalAnimatedVisibilityScope
 import world.hachimi.app.ui.LocalSharedTransitionScope
 import world.hachimi.app.ui.SharedTransitionKeys
+import world.hachimi.app.ui.TestTags
 import world.hachimi.app.ui.design.HachimiTheme
 import world.hachimi.app.ui.design.components.Button
 import world.hachimi.app.ui.player.fullscreen.components.FullScreenCoverCornerRadius
@@ -68,7 +70,7 @@ fun CompactMiniPlayer(
     AnimatedVisibility(visible = !global.playerExpanded) {
         CompositionLocalProvider(LocalAnimatedVisibilityScope provides this@AnimatedVisibility) {
             Container(
-                modifier = modifier,
+                modifier = modifier.testTag(TestTags.MINI_PLAYER),
                 hazeState = hazeState,
                 onClick = { global.expandPlayer() }
             ) {
@@ -89,7 +91,7 @@ fun CompactMiniPlayer(
                     }
 
                     PlayPauseButton(
-                        modifier = Modifier.size(48.dp),
+                        modifier = Modifier.size(48.dp).testTag(TestTags.MINI_PLAYER_PLAY),
                         status = when {
                             uiState.fetchingMetadata -> PlayPauseStatus.Fetching
                             uiState.isPlaying -> PlayPauseStatus.Playing
@@ -101,7 +103,7 @@ fun CompactMiniPlayer(
                     )
 
                     Button(
-                        modifier = Modifier.size(48.dp),
+                        modifier = Modifier.size(48.dp).testTag(TestTags.MINI_PLAYER_NEXT),
                         onClick = { global.player.next() },
                         contentPadding = PaddingValues.Zero
                     ) {

@@ -32,6 +32,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.dropShadow
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -49,6 +52,7 @@ import world.hachimi.app.getPlatform
 import world.hachimi.app.model.GlobalStore
 import world.hachimi.app.nav.LocalNavigator
 import world.hachimi.app.nav.Route
+import world.hachimi.app.ui.TestTags
 import world.hachimi.app.ui.component.Logo
 import world.hachimi.app.ui.design.components.AccentButton
 import world.hachimi.app.ui.design.components.CardShadow
@@ -72,7 +76,10 @@ fun CompactTopAppBar(
                 .windowInsetsPadding(WindowInsets.multiplatformSafeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top)),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            IconButton(onClick = onExpandNavClick) {
+            IconButton(
+                onClick = onExpandNavClick,
+                modifier = Modifier.testTag(TestTags.NAV_MENU),
+            ) {
                 Icon(Icons.Default.Menu, contentDescription = "Menu")
             }
             var searchText by remember { mutableStateOf("") }
@@ -88,12 +95,12 @@ fun CompactTopAppBar(
                 val userInfo = global.userInfo!!
                 AvatarOnly(
                     avatarUrl = userInfo.avatarUrl,
-                    onClick = { navigator.push(Route.Root.UserSpace) }
+                    onClick = { navigator.push(Route.Root.UserSpace) },
                 )
             } else {
                 AvatarOnly(
                     avatarUrl = null,
-                    onClick = { navigator.push(Route.Auth()) }
+                    onClick = { navigator.push(Route.Auth()) },
                 )
             }
         }
@@ -195,13 +202,21 @@ private fun NameAvatar(
 }
 
 @Composable
-private fun AvatarOnly(avatarUrl: String?, onClick: () -> Unit) {
+private fun AvatarOnly(
+    avatarUrl: String?,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .padding(start = 8.dp)
             .size(40.dp)
             .clip(CircleShape)
             .background(LocalContentColor.current.copy(0.12f))
+            // testTag + contentDescription on the clickable node so UI Automator can find it
+            // even when AsyncImage has no bitmap (guest blank avatar).
+            .semantics { contentDescription = "User Avatar" }
+            .testTag(TestTags.PROFILE_AVATAR)
             .clickable(onClick = onClick)
     ) {
         AsyncImage(
@@ -210,7 +225,7 @@ private fun AvatarOnly(avatarUrl: String?, onClick: () -> Unit) {
                 .data(avatarUrl)
                 .crossfade(true)
                 .build(),
-            contentDescription = "User Avatar",
+            contentDescription = null,
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
         )

@@ -33,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.autofill.ContentType
 import androidx.compose.ui.autofill.contentType
 import androidx.compose.ui.platform.LocalAutofillManager
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -73,6 +74,7 @@ import soup.compose.material.motion.animation.rememberSlideDistance
 import world.hachimi.app.model.AuthViewModel
 import world.hachimi.app.nav.HandleNavigationRequests
 import world.hachimi.app.nav.LocalNavigator
+import world.hachimi.app.ui.TestTags
 import world.hachimi.app.ui.auth.components.CaptchaDialog
 import world.hachimi.app.ui.auth.components.FormContent
 import world.hachimi.app.ui.auth.components.PasswordToggleButton
@@ -102,9 +104,17 @@ fun AuthScreen(
 
     HandleNavigationRequests(vm.navigationRequests, navigator)
 
-    Box(Modifier.fillMaxSize().multiplatformSafeDrawingPadding()) {
+    Box(
+        Modifier
+            .fillMaxSize()
+            .testTag(TestTags.AUTH_SCREEN)
+            .multiplatformSafeDrawingPadding()
+    ) {
         HachimiIconButton(
-            modifier = Modifier.padding(16.dp).align(Alignment.TopStart),
+            modifier = Modifier
+                .padding(16.dp)
+                .align(Alignment.TopStart)
+                .testTag(TestTags.AUTH_BACK),
             onClick = { navigator.back() },
             touchMode = true
         ) {

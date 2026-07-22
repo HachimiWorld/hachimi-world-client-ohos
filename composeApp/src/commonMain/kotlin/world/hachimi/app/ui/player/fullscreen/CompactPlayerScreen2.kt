@@ -45,6 +45,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.layout
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Constraints
@@ -111,12 +112,16 @@ fun CompactPlayerScreen2(
     var showShareDialog by remember { mutableStateOf(false) }
 
     Column(
-        Modifier.fillMaxSize()
+        Modifier
+            .fillMaxSize()
+            .testTag(world.hachimi.app.ui.TestTags.PLAYER_SCREEN)
             .multiplatformSafeDrawingPadding()
             .padding(vertical = 24.dp)
     ) {
         HachimiIconButton(
-            modifier = Modifier.padding(start = 16.dp),
+            modifier = Modifier
+                .padding(start = 16.dp)
+                .testTag(world.hachimi.app.ui.TestTags.PLAYER_SHRINK),
             onClick = { global.shrinkPlayer() },
             touchMode = true
         ) {

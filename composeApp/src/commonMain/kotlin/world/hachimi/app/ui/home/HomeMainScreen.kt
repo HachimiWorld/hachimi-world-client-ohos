@@ -35,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onVisibilityChanged
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
@@ -57,6 +58,7 @@ import world.hachimi.app.model.fromSearchSongItem
 import world.hachimi.app.nav.LocalNavigator
 import world.hachimi.app.nav.Route
 import world.hachimi.app.ui.LocalWindowSize
+import world.hachimi.app.ui.TestTags
 import world.hachimi.app.ui.component.LoadingPage
 import world.hachimi.app.ui.component.ReloadPage
 import world.hachimi.app.ui.design.components.Button
@@ -90,18 +92,23 @@ fun HomeMainScreen(
         screenWidth = LocalWindowSize.current.width
     ) {
         LazyColumn(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .testTag(TestTags.HOME_FEED),
             contentPadding = PaddingValues(vertical = 16.dp)
         ) {
             listHeadInsetsSpacerItem()
             item(contentType = "recent_section") {
                 Segment(
-                    modifier = Modifier.fillMaxWidthIn(),
+                    modifier = Modifier
+                        .fillMaxWidthIn()
+                        .testTag(TestTags.HOME_RECENT_SECTION),
                     label = stringResource(Res.string.home_recent_title),
                     status = vm.recentStatus,
                     loading = vm.recentLoading,
                     items = vm.recentSongs,
                     onMoreClick = { navigator.push(Route.Root.Home.Recent) },
+                    moreTestTag = TestTags.HOME_RECENT_MORE,
                     onLoad = vm::mountRecent,
                     onRefresh = {},
                     onRetryClick = vm::retryRecent
@@ -110,7 +117,10 @@ fun HomeMainScreen(
 
             item(contentType = "recommend_section") {
                 Segment(
-                    modifier = Modifier.fillMaxWidthIn().padding(top = AdaptiveListSpacing),
+                    modifier = Modifier
+                        .fillMaxWidthIn()
+                        .padding(top = AdaptiveListSpacing)
+                        .testTag(TestTags.HOME_RECOMMEND_SECTION),
                     label = stringResource(Res.string.home_recommend_title),
                     status = vm.recommendStatus,
                     loading = vm.recommendLoading,
@@ -124,12 +134,16 @@ fun HomeMainScreen(
 
             item(contentType = "hot_section") {
                 Segment(
-                    modifier = Modifier.fillMaxWidthIn().padding(top = AdaptiveListSpacing),
+                    modifier = Modifier
+                        .fillMaxWidthIn()
+                        .padding(top = AdaptiveListSpacing)
+                        .testTag(TestTags.HOME_WEEKLY_SECTION),
                     label = stringResource(Res.string.home_weekly_title),
                     status = vm.hotStatus,
                     loading = vm.hotLoading,
                     items = vm.hotSongs,
                     onMoreClick = { navigator.push(Route.Root.Home.WeeklyHot) },
+                    moreTestTag = TestTags.HOME_WEEKLY_MORE,
                     onLoad = vm::mountHot,
                     onRefresh = {},
                     onRetryClick = vm::retryHot
@@ -159,6 +173,7 @@ private fun Segment(
     onRefresh: () -> Unit,
     onRetryClick: () -> Unit,
     modifier: Modifier = Modifier,
+    moreTestTag: String? = null,
     global: GlobalStore = koinInject()
 ) {
     Column(modifier) {
@@ -166,6 +181,7 @@ private fun Segment(
             text = label,
             onMoreClick = onMoreClick,
             onLoad = onLoad,
+            moreTestTag = moreTestTag,
             modifier = Modifier.padding(horizontal = AdaptiveScreenMargin)
         )
         Spacer(Modifier.height(AdaptiveListSpacing))
@@ -316,6 +332,7 @@ private fun SegmentHeader(
     text: String,
     onMoreClick: () -> Unit,
     onLoad: () -> Unit = {},
+    moreTestTag: String? = null,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -325,20 +342,11 @@ private fun SegmentHeader(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(text = text, style = MaterialTheme.typography.titleLarge)
-        /*if (maxWidth >= WindowSize.COMPACT) {
-            IconButton(
-                modifier = Modifier.padding(start = 8.dp),
-                enabled = !vm.isLoading,
-                onClick = { vm.fakeRefresh() }
-            ) {
-                Icon(Icons.Default.Refresh, contentDescription = "Refresh")
-            }
-        }*/
 
         Spacer(Modifier.weight(1f))
 
         Button(
-            modifier = Modifier,
+            modifier = if (moreTestTag != null) Modifier.testTag(moreTestTag) else Modifier,
             onClick = onMoreClick
         ) {
             Text(stringResource(Res.string.common_more))

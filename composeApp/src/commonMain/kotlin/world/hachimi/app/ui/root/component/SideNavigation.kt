@@ -44,6 +44,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -75,6 +76,7 @@ import world.hachimi.app.model.SearchViewModel
 import world.hachimi.app.nav.LocalNavigator
 import world.hachimi.app.nav.Navigator
 import world.hachimi.app.nav.Route
+import world.hachimi.app.ui.TestTags
 import world.hachimi.app.ui.design.HachimiTheme
 import world.hachimi.app.ui.design.components.AccentButton
 import world.hachimi.app.ui.design.components.Icon
@@ -178,7 +180,7 @@ private fun SideNavItems(
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         NavItem(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().testTag(TestTags.NAV_EVENTS),
             icon = Icons.Default.Newspaper,
             label = stringResource(Res.string.nav_home_events),
             selected = content is Route.Root.Events.Feed,
@@ -186,7 +188,7 @@ private fun SideNavItems(
             density = density,
         )
         NavItem(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().testTag(TestTags.NAV_HOME),
             icon = Icons.Default.Home,
             label = stringResource(Res.string.nav_home_title),
             selected = content is Route.Root.Home.Main,
@@ -194,7 +196,7 @@ private fun SideNavItems(
             density = density,
         )
         NavItem(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().testTag(TestTags.NAV_RECENT_PLAY),
             icon = Icons.Default.History,
             label = stringResource(Res.string.nav_recent_play),
             selected = content == Route.Root.RecentPlay,
@@ -202,7 +204,7 @@ private fun SideNavItems(
             density = density,
         )
         NavItem(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().testTag(TestTags.NAV_RECENT_LIKE),
             icon = Icons.Default.FavoriteBorder,
             label = stringResource(Res.string.nav_recent_like),
             selected = content == Route.Root.RecentLike,
@@ -210,7 +212,7 @@ private fun SideNavItems(
             density = density,
         )
         NavItem(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().testTag(TestTags.NAV_MY_FOLLOWS),
             icon = Icons.Default.PersonAdd,
             label = stringResource(Res.string.nav_my_subscribe),
             selected = content == Route.Root.MySubscribe,
@@ -218,7 +220,7 @@ private fun SideNavItems(
             density = density,
         )
         NavItem(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().testTag(TestTags.NAV_MY_PLAYLISTS),
             icon = Icons.AutoMirrored.Filled.QueueMusic,
             label = stringResource(Res.string.nav_my_playlist),
             selected = content is Route.Root.MyPlaylist,
@@ -226,7 +228,7 @@ private fun SideNavItems(
             density = density,
         )
         NavItem(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().testTag(TestTags.NAV_CREATION),
             icon = Icons.Default.Edit,
             label = stringResource(Res.string.nav_creation_center),
             selected = content is Route.Root.CreationCenter,
@@ -234,7 +236,7 @@ private fun SideNavItems(
             density = density,
         )
         NavItem(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().testTag(TestTags.NAV_COMMITTEE),
             icon = Icons.Default.Groups,
             label = stringResource(Res.string.nav_committee_center),
             selected = content == Route.Root.CommitteeCenter,
@@ -242,7 +244,7 @@ private fun SideNavItems(
             density = density,
         )
         NavItem(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().testTag(TestTags.NAV_CONTRIBUTOR),
             icon = Icons.Default.Build,
             label = stringResource(Res.string.nav_contributor_center),
             selected = content is Route.Root.ContributorCenter,
@@ -252,7 +254,7 @@ private fun SideNavItems(
         if (includeSettings) {
             val navigator = LocalNavigator.current
             NavItem(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().testTag(TestTags.NAV_SETTINGS),
                 icon = Icons.Default.Settings,
                 label = stringResource(Res.string.nav_settings),
                 selected = false,

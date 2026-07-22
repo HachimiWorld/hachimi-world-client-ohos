@@ -26,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import hachimiworld.composeapp.generated.resources.Res
 import hachimiworld.composeapp.generated.resources.settings_changelog
@@ -87,10 +88,14 @@ fun SettingsScreen(
         onBack = navigator::back,
     ) {
         Column(
-            Modifier.fillMaxSize().verticalScroll(rememberScrollState())
+            Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
                 .padding(AdaptiveScreenMargin)
                 .listTailPadding()
-                .fillMaxWidthIn(),
+                .fillMaxWidthIn()
+                .testTag(world.hachimi.app.ui.TestTags.SETTINGS_SCREEN),
+
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
         Section(title = { Text("显示") }) {
