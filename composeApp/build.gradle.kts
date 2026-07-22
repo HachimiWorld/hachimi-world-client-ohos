@@ -27,6 +27,7 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_21)
         }
         androidResources.enable = true // This is used to enable the composeMultiplatform resources in android
+        withHostTest {  }
     }
 
     listOf(

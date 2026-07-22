@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.koinCompiler)
+    alias(libs.plugins.composeHotReload)
 }
 
 @Suppress("UNCHECKED_CAST")
