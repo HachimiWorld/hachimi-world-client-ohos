@@ -130,7 +130,7 @@ kotlin {
             implementation(libs.ktor.client.cio)
             implementation(libs.androidx.datastore.preferences)
         }
-        val nonAndroidMain by creating {
+        val nonAndroidMain = create("nonAndroidMain") {
             dependsOn(commonMain.get())
         }
         jvmMain {
@@ -210,6 +210,11 @@ val gitVersionName = providers.exec {
 
 val gitVersionNameShort = gitVersionName.map { it.substringBefore("-") }
 
+// Unix ms of HEAD. Must be stable: System.currentTimeMillis() rewrites BuildKonfig.kt
+// on every Gradle run and Compose Hot Reload --auto watches that file → infinite reload.
+val gitCommitTimeMs = providers.exec {
+    commandLine("git", "log", "-1", "--format=%ct")
+}.standardOutput.asText.map { it.trim().toLong() * 1000 }
 
 buildkonfig {
     packageName = "world.hachimi.app"
@@ -218,7 +223,7 @@ buildkonfig {
     val props = Properties().apply { load(rootProject.file(SdkConstants.FN_LOCAL_PROPERTIES).reader()) }
 
     defaultConfigs {
-        buildConfigField(Type.LONG, "BUILD_TIME", System.currentTimeMillis().toString())
+        buildConfigField(Type.LONG, "BUILD_TIME", gitCommitTimeMs.get().toString())
         buildConfigField(Type.INT, "VERSION_CODE", gitVersionCode.get().toString())
         buildConfigField(Type.STRING, "VERSION_NAME", gitVersionName.get())
 
