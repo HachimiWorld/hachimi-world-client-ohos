@@ -12,6 +12,7 @@ pluginManagement {
         }
         mavenCentral()
         gradlePluginPortal()
+        maven("https://maven.eazytec-cloud.com/nexus/repository/maven-public/")
     }
 }
 
@@ -25,6 +26,7 @@ dependencyResolutionManagement {
             }
         }
         mavenCentral()
+        maven("https://maven.eazytec-cloud.com/nexus/repository/maven-public/")
     }
 }
 

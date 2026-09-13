@@ -8,15 +8,22 @@ import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 import java.util.*
 
 plugins {
+    // Kotlin Commmon
     alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
-    alias(libs.plugins.composeHotReload)
-    alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.kotlinx.atomicfu)
-    alias(libs.plugins.ksp)
+    alias(libs.plugins.kotlinSerialization)
+
+    // Common
     alias(libs.plugins.buildkonfig)
+    alias(libs.plugins.ksp)
+
+    // Android
+    alias(libs.plugins.androidApplication)
+
+    // JVM
+    alias(libs.plugins.composeHotReload)
 }
 
 kotlin {
@@ -27,10 +34,8 @@ kotlin {
         }
     }
 
-    listOf(
-        iosX64(),
-        iosArm64(),
-        iosSimulatorArm64()
+    /*listOf(
+        iosArm64()
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
             baseName = "ComposeApp"
@@ -42,10 +47,10 @@ kotlin {
             // FIXME: Enabling this will get KLIB resolver error
 //            val nskeyvalueobserving by cinterops.creating
         }
-    }
+    }*/
 
-    jvm()
-
+//    jvm()
+/*
     @OptIn(ExperimentalWasmDsl::class)
     wasmJs {
         outputModuleName.set("composeApp")
@@ -67,6 +72,37 @@ kotlin {
             freeCompilerArgs.add("-Xwasm-attach-js-exception")
         }
         binaries.executable()
+    }*/
+
+    // Harmony OS
+    listOf(
+        ohosArm64(), /*ohosX64()*/
+    ).forEach { ohosTarget ->
+        ohosTarget.binaries.sharedLib {
+            baseName = "kn"
+            export(libs.compose.multiplatform.export)
+            linkerOpts("-lz")
+            // 渲染模式
+            // 背景：当 libkn.so 为旧编译产物时，其 DT_NEEDED 可能缺少以下库（正确构建时
+            // NativeTasksConfiguration.kt 已通过 -l 选项将它们写入 DT_NEEDED）。
+            // 在 build.gradle.kts 中统一补全，避免在 CMakeLists.txt 中硬编码。
+            val rendererBackend = rootProject.findProperty("rendererBackend")?.toString() ?: "fusion-renderer"
+            if (rendererBackend == "fusion-renderer") {
+                linkerOpts(
+                    "-lnative_drawing",    // OH_Drawing_*（字体、绘制）
+                    "-limage_source",       // OH_ImageSourceNative_*（图像解码）
+                    "-lpixelmap",           // OH_PixelMap_*
+                    "-lpixelmap_ndk.z",     // OH_PixelMapNdk_*
+                    "-lnative_window",      // OH_NativeWindow_*
+                    "-lace_napi.z",         // N-API
+                    "-lhilog_ndk.z",        // HiLog 日志
+                    "-lhitrace_ndk.z",      // HiTrace 性能追踪
+                    "-luv",                 // libuv 事件循环
+                    "-lunwind",             // 栈展开
+                    "-licu",               // ICU 文本处理
+                )
+            }
+        }
     }
 
     sourceSets {
@@ -90,12 +126,13 @@ kotlin {
             implementation(compose.foundation)
             implementation(compose.material3)
             implementation(compose.ui)
-            implementation(compose.materialIconsExtended)
+//            implementation(compose.materialIconsExtended)
+//            implementation(compose.materialIconsExtended) // FileKit/Icons 尚无 ohosArm64 变体。
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation(libs.compose.ui.backhandler)
-            implementation(libs.androidx.lifecycle.viewmodelCompose)
-            implementation(libs.androidx.lifecycle.runtimeCompose)
+//            implementation(libs.androidx.lifecycle.viewmodelCompose)
+//            implementation(libs.androidx.lifecycle.runtimeCompose)
 
             implementation(project.dependencies.platform(libs.koin.bom))
             implementation(libs.koin.core)
@@ -113,15 +150,15 @@ kotlin {
             implementation(libs.coil.compose)
             implementation(libs.coil.network.ktor3)
 
-            implementation(libs.filekit.dialogs)
-            implementation(libs.filekit.dialogs.compose)
-            implementation(libs.filekit.coil)
+//            implementation(libs.filekit.dialogs)
+//            implementation(libs.filekit.dialogs.compose)
+//            implementation(libs.filekit.coil)
 
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }
-        jvmMain.dependencies {
+        /*jvmMain.dependencies {
             implementation(compose.desktop.currentOs) {
                 exclude("org.jetbrains.compose.material")
             }
@@ -140,12 +177,25 @@ kotlin {
             implementation(libs.ktor.client.cio)
             implementation(libs.kotlinx.browser)
             implementation(npm("howler", "2.2.4"))
-        }
-        listOf(iosX64Main, iosArm64Main, iosSimulatorArm64Main).forEach {
+        }*/
+        /*listOf(iosArm64Main).forEach {
             it.dependencies {
                 implementation(libs.ktor.client.darwin)
             }
+        }*/
+
+        val ohosMain by creating {
+            dependsOn(commonMain.get())
+            dependencies {
+                api(libs.compose.multiplatform.export)
+            }
         }
+        val ohosArm64Main by getting {
+            dependsOn(ohosMain)
+        }
+        /*val ohosX64Main by getting {
+            dependsOn(ohosMain)
+        }*/
     }
 
     compilerOptions {
@@ -326,4 +376,41 @@ buildkonfig {
 
 tasks.register("printVersions") {
     println(gitVersionName.get() + " " + gitVersionCode.get() + " " + gitVersionNameShort.get())
+}
+
+// 为不同类型(debug、release)OHOS构建注册Copy任务并发布到Harmony App目录
+arrayOf("debug", "release").forEach { type ->
+    tasks.register<Copy>("publish${type.capitalizeUS()}BinariesToHarmonyApp") {
+        group = "harmony" // 归类到harmony任务组
+        dependsOn(
+            "link${type.capitalizeUS()}SharedOhosArm64"        )
+        duplicatesStrategy = DuplicatesStrategy.INCLUDE
+        into(harmonyAppDir) // 输出目标目录
+        from("build/bin/ohosArm64/${type}Shared/libkn_api.h") { // 复制头文件
+            into("entry/src/main/cpp/include/arm64-v8a/")         // 指定目录
+        }
+        from(project.file("build/bin/ohosArm64/${type}Shared/libkn.so")) { // 复制共享库文件
+            into("entry/libs/arm64-v8a/")           // 指定目标目录
+        }
+        val composeResourcePackage = "${rootProject.name.lowercase()}.${project.name.lowercase()}.generated.resources"
+        from("src/commonMain/composeResources") {
+            into("entry/src/main/resources/rawfile/composeResources/$composeResourcePackage/")
+        }
+
+    }
+}
+
+val harmonyAppDir: File = run {
+    val cliPath = project.findProperty("harmonyAppPath") as String?
+    if (cliPath.isNullOrBlank()) {
+        // 默认：项目根目录 /harmonyApp
+        rootProject.file("harmonyApp")
+    } else {
+        // 命令行传入的路径
+        file(cliPath)
+    }
+}
+
+fun String.capitalizeUS(): String = this.replaceFirstChar {
+    if (it.isLowerCase()) it.titlecase() else it.toString()
 }
