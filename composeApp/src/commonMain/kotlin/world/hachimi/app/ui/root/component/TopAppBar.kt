@@ -7,10 +7,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -24,6 +20,11 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import hachimiworld.composeapp.generated.resources.Res
+import hachimiworld.composeapp.generated.resources.ms_arrow_back
+import hachimiworld.composeapp.generated.resources.ms_menu
+import hachimiworld.composeapp.generated.resources.ms_search
+import org.jetbrains.compose.resources.vectorResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import world.hachimi.app.getPlatform
 import world.hachimi.app.model.GlobalStore
@@ -58,7 +59,7 @@ fun CompactTopAppBar(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             IconButton(onClick = onExpandNavClick) {
-                Icon(Icons.Default.Menu, contentDescription = "Menu")
+                Icon(vectorResource(Res.drawable.ms_menu), contentDescription = "Menu")
             }
             var searchText by remember { mutableStateOf("") }
             SearchBox(
@@ -99,7 +100,7 @@ fun ExpandedTopAppBar(global: GlobalStore) {
             if (getPlatform().name == "JVM") IconButton(onClick = {
                 global.nav.back()
             }, enabled = global.nav.backStack.size > 1) {
-                Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                Icon(vectorResource(Res.drawable.ms_arrow_back), contentDescription = "Back")
             }
             Logo()
 
@@ -168,7 +169,7 @@ private fun SearchBox(
                         },
                         enabled = searchText.isNotBlank()
                     ) {
-                        Icon(Icons.Default.Search, "Search")
+                        Icon(vectorResource(Res.drawable.ms_search), "Search")
                     }
                 }
             }

@@ -8,8 +8,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -23,6 +21,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEachIndexed
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
+import hachimiworld.composeapp.generated.resources.Res
+import hachimiworld.composeapp.generated.resources.ms_close
+import org.jetbrains.compose.resources.vectorResource
 import world.hachimi.app.model.PublishViewModel
 import world.hachimi.app.util.singleLined
 
@@ -37,7 +38,7 @@ fun TagEdit(
                     label = { Text(item.name) },
                     trailingIcon = {
 //                        IconButton(onClick = { onRemoveClick(index) }) {
-                        Icon(Icons.Default.Close, contentDescription = "Remove")
+                        Icon(vectorResource(Res.drawable.ms_close), contentDescription = "Remove")
 //                        }
                     },
                     onClick = {

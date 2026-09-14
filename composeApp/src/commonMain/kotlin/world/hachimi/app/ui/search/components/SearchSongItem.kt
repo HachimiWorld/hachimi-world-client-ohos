@@ -1,10 +1,6 @@
 package world.hachimi.app.ui.search.components
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Explicit
-import androidx.compose.material.icons.filled.Headphones
-import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -12,6 +8,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import hachimiworld.composeapp.generated.resources.Res
+import hachimiworld.composeapp.generated.resources.ms_explicit
+import hachimiworld.composeapp.generated.resources.ms_headphones
+import hachimiworld.composeapp.generated.resources.ms_schedule
+import org.jetbrains.compose.resources.vectorResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import world.hachimi.app.api.module.SongModule
 import world.hachimi.app.ui.theme.PreviewTheme
@@ -48,7 +49,7 @@ fun SearchSongItem(
 
                         if (data.explicit == true) Icon(
                             modifier = Modifier.padding(start = 8.dp).requiredSize(16.dp),
-                            imageVector = Icons.Default.Explicit,
+                            imageVector = vectorResource(Res.drawable.ms_explicit),
                             contentDescription = "Explicit",
                             tint = LocalContentColor.current.copy(0.72f),
                         )
@@ -65,7 +66,7 @@ fun SearchSongItem(
                 }
                 Column {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(Icons.Default.Schedule, contentDescription = "Duration", modifier = Modifier.size(12.dp))
+                        Icon(vectorResource(Res.drawable.ms_schedule), contentDescription = "Duration", modifier = Modifier.size(12.dp))
                         Text(
                             modifier = Modifier.padding(start = 4.dp),
                             text = formatSongDuration(data.durationSeconds.seconds), style = MaterialTheme.typography.bodySmall
@@ -73,7 +74,7 @@ fun SearchSongItem(
                     }
 
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(Icons.Default.Headphones, contentDescription = "Play Count", modifier = Modifier.size(12.dp))
+                        Icon(vectorResource(Res.drawable.ms_headphones), contentDescription = "Play Count", modifier = Modifier.size(12.dp))
                         Text(
                             modifier = Modifier.padding(start = 4.dp),
                             text = data.playCount.toString(), style = MaterialTheme.typography.bodySmall

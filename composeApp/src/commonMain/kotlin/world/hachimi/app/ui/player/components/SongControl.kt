@@ -5,13 +5,21 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import hachimiworld.composeapp.generated.resources.Res
+import hachimiworld.composeapp.generated.resources.ms_pause
+import hachimiworld.composeapp.generated.resources.ms_play_arrow
+import hachimiworld.composeapp.generated.resources.ms_repeat
+import hachimiworld.composeapp.generated.resources.ms_repeat_on
+import hachimiworld.composeapp.generated.resources.ms_shuffle
+import hachimiworld.composeapp.generated.resources.ms_shuffle_on
+import hachimiworld.composeapp.generated.resources.ms_skip_next
+import hachimiworld.composeapp.generated.resources.ms_skip_previous
+import org.jetbrains.compose.resources.vectorResource
 
 @Composable
 fun SongControl(
@@ -34,11 +42,11 @@ fun SongControl(
         IconButton(onClick = {
             onShuffleModeChange(!shuffle)
         }) {
-            if (shuffle) Icon(Icons.Default.ShuffleOn, "Shuffle On")
-            else Icon(Icons.Default.Shuffle, "Shuffle Off")
+            if (shuffle) Icon(vectorResource(Res.drawable.ms_shuffle_on), "Shuffle On")
+            else Icon(vectorResource(Res.drawable.ms_shuffle), "Shuffle Off")
         }
         IconButton(onClick = onPreviousClick) {
-            Icon(Icons.Default.SkipPrevious, "Skip Previous")
+            Icon(vectorResource(Res.drawable.ms_skip_previous), "Skip Previous")
         }
         IconButton(onClick = onPlayPauseClick, colors = IconButtonDefaults.filledIconButtonColors()) {
             if (isLoading) {
@@ -60,20 +68,20 @@ fun SongControl(
                 }
             } else {
                 if (isPlaying) {
-                    Icon(Icons.Default.Pause, "Pause")
+                    Icon(vectorResource(Res.drawable.ms_pause), "Pause")
                 } else {
-                    Icon(Icons.Default.PlayArrow, "Play")
+                    Icon(vectorResource(Res.drawable.ms_play_arrow), "Play")
                 }
             }
         }
         IconButton(onClick = onNextClick) {
-            Icon(Icons.Default.SkipNext, "Skip Next")
+            Icon(vectorResource(Res.drawable.ms_skip_next), "Skip Next")
         }
         IconButton(onClick = {
             onRepeatModeChange(!repeat)
         }) {
-            if (repeat) Icon(Icons.Default.RepeatOn, "Repeat On")
-            else Icon(Icons.Default.Repeat, "Repeat Off")
+            if (repeat) Icon(vectorResource(Res.drawable.ms_repeat_on), "Repeat On")
+            else Icon(vectorResource(Res.drawable.ms_repeat), "Repeat Off")
         }
     }
 }

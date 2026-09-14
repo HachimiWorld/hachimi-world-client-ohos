@@ -9,12 +9,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.PlaylistAdd
-import androidx.compose.material.icons.automirrored.filled.QueueMusic
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.Explicit
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -27,6 +21,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import coil3.compose.AsyncImage
+import hachimiworld.composeapp.generated.resources.Res
+import hachimiworld.composeapp.generated.resources.ms_add
+import hachimiworld.composeapp.generated.resources.ms_check_circle
+import hachimiworld.composeapp.generated.resources.ms_explicit
+import hachimiworld.composeapp.generated.resources.ms_playlist_add
+import hachimiworld.composeapp.generated.resources.ms_queue_music
+import org.jetbrains.compose.resources.vectorResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import world.hachimi.app.model.GlobalStore
@@ -92,7 +93,7 @@ fun CompactFooterPlayer(modifier: Modifier) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Text(displayedTitle, style = MaterialTheme.typography.bodyMedium, maxLines = 1, overflow = TextOverflow.Ellipsis)
                             if (explicit == true) Icon(
-                                imageVector = Icons.Default.Explicit,
+                                imageVector = vectorResource(Res.drawable.ms_explicit),
                                 contentDescription = "Explicit",
                                 tint = MaterialTheme.colorScheme.onSurface,
                                 modifier = Modifier.padding(start = 4.dp).requiredSize(16.dp)
@@ -110,11 +111,11 @@ fun CompactFooterPlayer(modifier: Modifier) {
                     IconButton(onClick = {
                         tobeAddedSong = playerState.songInfo?.id?.let { it to Random.nextLong() }
                     }) {
-                        Icon(Icons.AutoMirrored.Filled.PlaylistAdd, "Add To Playlist")
+                        Icon(vectorResource(Res.drawable.ms_playlist_add), "Add To Playlist")
                     }
 
                     IconButton(onClick = { queueExpanded = true }) {
-                        Icon(Icons.AutoMirrored.Filled.QueueMusic, "Queue")
+                        Icon(vectorResource(Res.drawable.ms_queue_music), "Queue")
                     }
 
                     if (queueExpanded) Popup(
@@ -221,7 +222,7 @@ fun ExpandedFooterPlayer() {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(displayedTitle, style = MaterialTheme.typography.bodyMedium, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 if (explicit == true) Icon(
-                    imageVector = Icons.Default.Explicit,
+                    imageVector = vectorResource(Res.drawable.ms_explicit),
                     contentDescription = "Explicit",
                     tint = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.padding(start = 4.dp).requiredSize(16.dp)
@@ -253,11 +254,11 @@ fun ExpandedFooterPlayer() {
                 IconButton(onClick = {
                     tobeAddedSong = playerState.songInfo?.id?.let { it to Random.nextLong() }
                 }) {
-                    Icon(Icons.AutoMirrored.Filled.PlaylistAdd, "Add To Playlist")
+                    Icon(vectorResource(Res.drawable.ms_playlist_add), "Add To Playlist")
                 }
 
                 IconButton(onClick = { queueExpanded = true }) {
-                    Icon(Icons.AutoMirrored.Filled.QueueMusic, "Queue")
+                    Icon(vectorResource(Res.drawable.ms_queue_music), "Queue")
                 }
             }
 
@@ -352,7 +353,7 @@ private fun AddToPlaylistDialog(
                         onClick = { vm.createPlaylist() }
                     ) {
                         Row(Modifier.padding(16.dp)) {
-                            Icon(Icons.Default.Add, contentDescription = null)
+                            Icon(vectorResource(Res.drawable.ms_add), contentDescription = null)
                             Text(
                                 modifier = Modifier.padding(start = 16.dp),
                                 text = "新建歌单"
@@ -394,7 +395,7 @@ private fun AddToPlaylistDialog(
                                     if (vm.selectedPlaylistId == item.id) {
                                         Icon(
                                             modifier = Modifier.padding(end = 12.dp),
-                                            imageVector = Icons.Default.CheckCircle,
+                                            imageVector = vectorResource(Res.drawable.ms_check_circle),
                                             contentDescription = "Selected"
                                         )
                                     }

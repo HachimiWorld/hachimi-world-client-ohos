@@ -3,8 +3,6 @@ package world.hachimi.app.ui
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -14,7 +12,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import coil3.ImageLoader
 import coil3.compose.setSingletonImageLoaderFactory
+import hachimiworld.composeapp.generated.resources.Res
+import hachimiworld.composeapp.generated.resources.ms_warning
 import io.github.vinceglb.filekit.coil.addPlatformFileSupport
+import org.jetbrains.compose.resources.vectorResource
 import org.koin.compose.koinInject
 import world.hachimi.app.model.GlobalStore
 import world.hachimi.app.nav.Route.*
@@ -98,7 +99,7 @@ private fun ClientApiVersionIncompatibleDialog(global: GlobalStore) {
                 }
             },
             icon = {
-                Icon(Icons.Default.Warning, "Warning")
+                Icon(vectorResource(Res.drawable.ms_warning), "Warning")
             },
             onDismissRequest = {
                 // Do nothing

@@ -6,10 +6,6 @@ import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Female
-import androidx.compose.material.icons.filled.Male
-import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -20,6 +16,11 @@ import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import hachimiworld.composeapp.generated.resources.Res
+import hachimiworld.composeapp.generated.resources.ms_female
+import hachimiworld.composeapp.generated.resources.ms_male
+import hachimiworld.composeapp.generated.resources.ms_play_arrow
+import org.jetbrains.compose.resources.vectorResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import world.hachimi.app.model.GlobalStore
@@ -96,8 +97,8 @@ fun UserSpaceScreen(uid: Long?, vm: UserSpaceViewModel = koinViewModel()) {
                                     Spacer(Modifier.width(4.dp))
                                     Box(Modifier.size(16.dp)) {
                                         when (profile.gender) {
-                                            0 -> Icon(Icons.Default.Male, contentDescription = "Male")
-                                            1 -> Icon(Icons.Default.Female, contentDescription = "Female")
+                                            0 -> Icon(vectorResource(Res.drawable.ms_male), contentDescription = "Male")
+                                            1 -> Icon(vectorResource(Res.drawable.ms_female), contentDescription = "Female")
                                         }
                                     }
                                 }
@@ -132,7 +133,7 @@ fun UserSpaceScreen(uid: Long?, vm: UserSpaceViewModel = koinViewModel()) {
                                 modifier = Modifier,
                                 onClick = { vm.playAll() }
                             ) {
-                                Icon(Icons.Default.PlayArrow, contentDescription = "Play")
+                                Icon(vectorResource(Res.drawable.ms_play_arrow), contentDescription = "Play")
                                 Spacer(Modifier.width(8.dp))
                                 Text("播放全部")
                             }

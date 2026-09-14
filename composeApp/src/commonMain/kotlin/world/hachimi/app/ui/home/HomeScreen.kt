@@ -8,8 +8,6 @@ import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material3.*
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
@@ -20,6 +18,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import hachimiworld.composeapp.generated.resources.Res
+import hachimiworld.composeapp.generated.resources.ms_arrow_forward
+import hachimiworld.composeapp.generated.resources.ms_refresh
+import org.jetbrains.compose.resources.vectorResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import world.hachimi.app.model.*
@@ -233,7 +235,7 @@ private fun SegmentHeader(
                 enabled = !vm.isLoading,
                 onClick = { vm.fakeRefresh() }
             ) {
-                Icon(Icons.Default.Refresh, contentDescription = "Refresh")
+                Icon(vectorResource(Res.drawable.ms_refresh), contentDescription = "Refresh")
             }
         }*/
 
@@ -245,7 +247,7 @@ private fun SegmentHeader(
         ) {
             Text("更多")
             Spacer(Modifier.width(8.dp))
-            Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = "Play")
+            Icon(vectorResource(Res.drawable.ms_arrow_forward), contentDescription = "Play")
         }
     }
 }

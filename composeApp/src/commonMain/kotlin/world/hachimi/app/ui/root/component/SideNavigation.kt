@@ -6,14 +6,22 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.QueueMusic
-import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import hachimiworld.composeapp.generated.resources.Res
+import hachimiworld.composeapp.generated.resources.ms_build
+import hachimiworld.composeapp.generated.resources.ms_edit
+import hachimiworld.composeapp.generated.resources.ms_favorite_border
+import hachimiworld.composeapp.generated.resources.ms_groups
+import hachimiworld.composeapp.generated.resources.ms_history
+import hachimiworld.composeapp.generated.resources.ms_home
+import hachimiworld.composeapp.generated.resources.ms_person_add
+import hachimiworld.composeapp.generated.resources.ms_queue_music
+import hachimiworld.composeapp.generated.resources.ms_settings
+import org.jetbrains.compose.resources.vectorResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import world.hachimi.app.nav.Route
 import world.hachimi.app.ui.theme.PreviewTheme
@@ -26,19 +34,19 @@ fun SideNavigation(
     Column(Modifier.defaultMinSize(minWidth = 300.dp)) {
         Column(Modifier.weight(1f).verticalScroll(rememberScrollState())) {
             NavItem(
-                icon = Icons.Default.Home,
+                icon = vectorResource(Res.drawable.ms_home),
                 label = "主页",
                 selected = content is Route.Root.Home,
                 onSelectedChange = {
                     onChange(Route.Root.Home.Main)
                 })
             NavItem(
-                icon = Icons.Default.FavoriteBorder,
+                icon = vectorResource(Res.drawable.ms_favorite_border),
                 label = "最近点赞", selected = content == Route.Root.RecentLike, onSelectedChange = {
                     onChange(Route.Root.RecentLike)
                 })
             NavItem(
-                icon = Icons.Default.History,
+                icon = vectorResource(Res.drawable.ms_history),
                 label = "最近播放",
                 selected = content == Route.Root.RecentPlay,
                 onSelectedChange = {
@@ -46,20 +54,20 @@ fun SideNavigation(
                 })
 
             NavItem(
-                icon = Icons.AutoMirrored.Filled.QueueMusic,
+                icon = vectorResource(Res.drawable.ms_queue_music),
                 label = "我的歌单",
                 selected = content is Route.Root.MyPlaylist,
                 onSelectedChange = {
                     onChange(Route.Root.MyPlaylist.Default)
                 })
             NavItem(
-                icon = Icons.Default.PersonAdd,
+                icon = vectorResource(Res.drawable.ms_person_add),
                 label = "我的关注", selected = content == Route.Root.MySubscribe, onSelectedChange = {
                     onChange(Route.Root.MySubscribe)
                 })
 
             NavItem(
-                icon = Icons.Default.Edit,
+                icon = vectorResource(Res.drawable.ms_edit),
                 label = "创作中心",
                 selected = content is Route.Root.CreationCenter,
                 onSelectedChange = {
@@ -67,14 +75,14 @@ fun SideNavigation(
                 })
 
             NavItem(
-                icon = Icons.Default.Groups,
+                icon = vectorResource(Res.drawable.ms_groups),
                 label = "委员会中心",
                 selected = content == Route.Root.CommitteeCenter,
                 onSelectedChange = {
                     onChange(Route.Root.CommitteeCenter)
                 })
             NavItem(
-                icon = Icons.Default.Build,
+                icon = vectorResource(Res.drawable.ms_build),
                 label = "贡献者中心",
                 selected = content is Route.Root.ContributorCenter,
                 onSelectedChange = {
@@ -89,7 +97,7 @@ fun SideNavigation(
         )
 
         NavItem(
-            icon = Icons.Default.Settings,
+            icon = vectorResource(Res.drawable.ms_settings),
             label = "设置",
             selected = content is Route.Root.Settings,
             onSelectedChange = {

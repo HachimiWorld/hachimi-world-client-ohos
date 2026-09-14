@@ -8,8 +8,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -21,6 +19,8 @@ import androidx.compose.ui.text.font.FontVariation
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.platform.Font
 import androidx.compose.ui.unit.dp
+import hachimiworld.composeapp.generated.resources.Res
+import hachimiworld.composeapp.generated.resources.ms_error
 import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
@@ -32,6 +32,7 @@ import kotlinx.coroutines.await
 import kotlinx.coroutines.withContext
 import kotlinx.io.Buffer
 import kotlinx.io.readByteArray
+import org.jetbrains.compose.resources.vectorResource
 import org.khronos.webgl.ArrayBuffer
 import org.khronos.webgl.Int8Array
 import org.koin.compose.koinInject
@@ -159,7 +160,7 @@ fun WithFont(
                                 Text("Loading...")
                             }
                         } else {
-                            Icon(Icons.Default.Error, contentDescription = "Error")
+                            Icon(vectorResource(Res.drawable.ms_error), contentDescription = "Error")
                             when (error.value) {
                                 FontLoadError.NotSupported -> Text("Not supported")
                                 FontLoadError.PermissionDenied -> Text("Permission denied")

@@ -3,13 +3,14 @@ package world.hachimi.app.ui.settings
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import hachimiworld.composeapp.generated.resources.Res
+import hachimiworld.composeapp.generated.resources.ms_arrow_drop_down
+import org.jetbrains.compose.resources.vectorResource
 import org.koin.compose.koinInject
 import world.hachimi.app.BuildKonfig
 import world.hachimi.app.getPlatform
@@ -38,7 +39,7 @@ fun SettingsScreen() {
                             null -> "跟随系统"
                         }
                     )
-                    Icon(Icons.Default.ArrowDropDown, contentDescription = "Dropdown")
+                    Icon(vectorResource(Res.drawable.ms_arrow_drop_down), contentDescription = "Dropdown")
                 }
                 DropdownMenu(expanded, onDismissRequest = { expanded = false }) {
                     DropdownMenuItem(onClick = {

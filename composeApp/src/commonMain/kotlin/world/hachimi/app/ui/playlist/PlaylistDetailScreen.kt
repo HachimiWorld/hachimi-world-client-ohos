@@ -5,9 +5,6 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -17,6 +14,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import hachimiworld.composeapp.generated.resources.Res
+import hachimiworld.composeapp.generated.resources.ms_more_vert
+import hachimiworld.composeapp.generated.resources.ms_play_arrow
+import org.jetbrains.compose.resources.vectorResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import world.hachimi.app.model.GlobalStore
@@ -123,7 +124,7 @@ fun PlaylistDetailScreen(
                                 modifier = Modifier,
                                 onClick = { vm.playAll() }
                             ) {
-                                Icon(Icons.Default.PlayArrow, contentDescription = "Play")
+                                Icon(vectorResource(Res.drawable.ms_play_arrow), contentDescription = "Play")
                                 Spacer(Modifier.width(16.dp))
                                 Text("播放全部")
                             }
@@ -210,7 +211,7 @@ private fun SongItem(
 
             Box {
                 IconButton(onClick = { dropdownExpanded = true }) {
-                    Icon(Icons.Default.MoreVert, contentDescription = "Dropdown")
+                    Icon(vectorResource(Res.drawable.ms_more_vert), contentDescription = "Dropdown")
                 }
                 DropdownMenu(expanded = dropdownExpanded, onDismissRequest = { dropdownExpanded = false }) {
                     DropdownMenuItem(onClick = {

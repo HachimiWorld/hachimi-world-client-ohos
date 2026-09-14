@@ -6,9 +6,6 @@ import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -17,6 +14,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
+import hachimiworld.composeapp.generated.resources.Res
+import hachimiworld.composeapp.generated.resources.ms_play_arrow
+import hachimiworld.composeapp.generated.resources.ms_refresh
+import org.jetbrains.compose.resources.vectorResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import world.hachimi.app.model.GlobalStore
@@ -85,7 +86,7 @@ private fun Content(vm: RecentPublishViewModel, global: GlobalStore) {
                                 enabled = !vm.loading,
                                 onClick = { vm.fakeRefresh() }
                             ) {
-                                Icon(Icons.Default.Refresh, contentDescription = "Refresh")
+                                Icon(vectorResource(Res.drawable.ms_refresh), contentDescription = "Refresh")
                             }
                         }
 
@@ -95,7 +96,7 @@ private fun Content(vm: RecentPublishViewModel, global: GlobalStore) {
                             modifier = Modifier,
                             onClick = { vm.playAllRecent() }
                         ) {
-                            Icon(Icons.Default.PlayArrow, contentDescription = "Play")
+                            Icon(vectorResource(Res.drawable.ms_play_arrow), contentDescription = "Play")
                             Spacer(Modifier.width(8.dp))
                             Text("播放全部")
                         }

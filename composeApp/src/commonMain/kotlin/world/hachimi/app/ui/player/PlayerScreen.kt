@@ -4,10 +4,6 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CloseFullscreen
-import androidx.compose.material.icons.filled.Explicit
-import androidx.compose.material.icons.filled.MusicVideo
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -18,6 +14,11 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.min
 import androidx.compose.ui.util.fastForEach
+import hachimiworld.composeapp.generated.resources.Res
+import hachimiworld.composeapp.generated.resources.ms_close_fullscreen
+import hachimiworld.composeapp.generated.resources.ms_explicit
+import hachimiworld.composeapp.generated.resources.ms_music_video
+import org.jetbrains.compose.resources.vectorResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
 import world.hachimi.app.api.module.SongModule
@@ -157,7 +158,7 @@ fun CompactPlayerScreen(
                 modifier = Modifier.align(Alignment.TopEnd).padding(16.dp),
                 onClick = onShrinkClick
             ) {
-                Icon(Icons.Default.CloseFullscreen, "Shrink")
+                Icon(vectorResource(Res.drawable.ms_close_fullscreen), "Shrink")
             }
         }
 
@@ -310,7 +311,7 @@ fun ExpandedPlayerScreen(
             modifier = Modifier.align(Alignment.TopEnd).padding(16.dp),
             onClick = onShrinkClick
         ) {
-            Icon(Icons.Default.CloseFullscreen, "Shrink")
+            Icon(vectorResource(Res.drawable.ms_close_fullscreen), "Shrink")
         }
     }
 }
@@ -363,7 +364,7 @@ private fun MetadataInfo(
 
         if (explicit == true) Icon(
             modifier = Modifier.padding(start = 8.dp).requiredSize(16.dp),
-            imageVector = Icons.Default.Explicit,
+            imageVector = vectorResource(Res.drawable.ms_explicit),
             contentDescription = "Explicit",
             tint = LocalContentColor.current.copy(0.72f),
         )
@@ -433,7 +434,7 @@ private fun MetadataInfo(
                         interactionSource = null,
                         onClick = { showExternalLinks = true },
                     ),
-                    imageVector = Icons.Default.MusicVideo,
+                    imageVector = vectorResource(Res.drawable.ms_music_video),
                     contentDescription = "Music Video",
                     tint = LocalContentColor.current.copy(0.7f)
                 )

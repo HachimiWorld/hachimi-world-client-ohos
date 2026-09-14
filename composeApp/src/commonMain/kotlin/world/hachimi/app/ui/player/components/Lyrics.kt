@@ -6,8 +6,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MusicNote
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
@@ -23,8 +21,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
+import hachimiworld.composeapp.generated.resources.Res
+import hachimiworld.composeapp.generated.resources.ms_music_note
 import kotlin.math.abs
 import kotlin.math.roundToInt
+import org.jetbrains.compose.resources.vectorResource
 
 @Composable
 fun Lyrics(
@@ -48,7 +49,7 @@ fun Lyrics(
         if (loading) {
             Icon(
                 modifier = Modifier.padding(top = 64.dp).size(28.dp),
-                imageVector = Icons.Default.MusicNote,
+                imageVector = vectorResource(Res.drawable.ms_music_note),
                 contentDescription = "Loading",
                 tint = LocalContentColor.current.copy(0.48f)
             )
@@ -98,7 +99,7 @@ fun Lyrics(
                 }
 
                 if (line.isBlank()) Icon(
-                    imageVector = Icons.Default.MusicNote,
+                    imageVector = vectorResource(Res.drawable.ms_music_note),
                     contentDescription = "Interlude",
                     tint = LocalContentColor.current.copy(alpha = alpha),
                     modifier = Modifier.padding(vertical = 12.dp).size(28.dp).graphicsLayer {
@@ -120,7 +121,7 @@ fun Lyrics(
         } else {
             Icon(
                 modifier = Modifier.padding(top = 64.dp).size(28.dp),
-                imageVector = Icons.Default.MusicNote,
+                imageVector = vectorResource(Res.drawable.ms_music_note),
                 contentDescription = "No Lyrics",
                 tint = LocalContentColor.current.copy(0.48f)
             )

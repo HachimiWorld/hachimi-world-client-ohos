@@ -3,9 +3,6 @@ package world.hachimi.app.ui.component
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ChevronLeft
-import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -20,6 +17,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import hachimiworld.composeapp.generated.resources.Res
+import hachimiworld.composeapp.generated.resources.ms_chevron_left
+import hachimiworld.composeapp.generated.resources.ms_chevron_right
+import org.jetbrains.compose.resources.vectorResource
 
 @Composable
 fun Pagination(
@@ -66,7 +67,7 @@ fun Pagination(
         Button(onClick = {
             if (currentPage > 0) { pageChange(currentPage - 1) }
         }) {
-            Icon(Icons.Default.ChevronLeft, "Previous")
+            Icon(vectorResource(Res.drawable.ms_chevron_left), "Previous")
         }
         for (i in 0..pageCount) {
             val checked = currentPage == i
@@ -85,7 +86,7 @@ fun Pagination(
                 pageChange(currentPage + 1)
             }
         }) {
-            Icon(Icons.Default.ChevronRight, "Next")
+            Icon(vectorResource(Res.drawable.ms_chevron_right), "Next")
         }
     }
 }

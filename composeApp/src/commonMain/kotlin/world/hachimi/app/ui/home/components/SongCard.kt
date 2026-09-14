@@ -1,9 +1,6 @@
 package world.hachimi.app.ui.home.components
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Explicit
-import androidx.compose.material.icons.filled.Headphones
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -14,6 +11,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import hachimiworld.composeapp.generated.resources.Res
+import hachimiworld.composeapp.generated.resources.ms_explicit
+import hachimiworld.composeapp.generated.resources.ms_headphones
+import org.jetbrains.compose.resources.vectorResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import world.hachimi.app.api.module.SongModule
 import world.hachimi.app.ui.theme.PreviewTheme
@@ -97,7 +98,7 @@ fun SongCard(
                     )
                     // Explicit mark
                     if (explicit == true) Icon(
-                        imageVector = Icons.Default.Explicit,
+                        imageVector = vectorResource(Res.drawable.ms_explicit),
                         contentDescription = "Explicit",
                         tint = MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier.padding(start = 4.dp).requiredSize(16.dp)
@@ -112,7 +113,7 @@ fun SongCard(
                         maxLines = 1
                     )
                     Icon(
-                        Icons.Default.Headphones,
+                        vectorResource(Res.drawable.ms_headphones),
                         "Play Count",
                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(end = 4.dp).size(12.dp)
@@ -184,7 +185,7 @@ fun SongCardInHorizontal(
                             color = MaterialTheme.colorScheme.onSurface,
                             maxLines = 1
                         )
-                        Icon(Icons.Default.Explicit, "Explicit", tint = MaterialTheme.colorScheme.onSurface,
+                        Icon(vectorResource(Res.drawable.ms_explicit), "Explicit", tint = MaterialTheme.colorScheme.onSurface,
                             modifier = Modifier.requiredSize(16.dp))
                     }
                     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -196,7 +197,7 @@ fun SongCardInHorizontal(
                             maxLines = 1
                         )
                         Icon(
-                            Icons.Default.Headphones,
+                            vectorResource(Res.drawable.ms_headphones),
                             "Play Count",
                             tint = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.padding(end = 4.dp).size(12.dp)

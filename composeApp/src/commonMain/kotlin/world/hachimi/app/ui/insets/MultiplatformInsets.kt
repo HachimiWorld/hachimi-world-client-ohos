@@ -50,7 +50,7 @@ fun Modifier.safeAreaPadding(): Modifier = this.then(
 )
 
 enum class Platform {
-    MacOS, Windows, Linux, Android, Web, iOS, Unknown
+    MacOS, Windows, Linux, Android, Web, iOS, OHOS, Unknown
 }
 
 expect fun getCurrentPlatform(): Platform

@@ -3,10 +3,6 @@ package world.hachimi.app.ui.creation.publish
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -20,6 +16,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
 import androidx.compose.ui.util.fastForEachIndexed
 import coil3.compose.AsyncImage
+import hachimiworld.composeapp.generated.resources.Res
+import hachimiworld.composeapp.generated.resources.ms_add
+import hachimiworld.composeapp.generated.resources.ms_arrow_drop_down
+import hachimiworld.composeapp.generated.resources.ms_remove
+import org.jetbrains.compose.resources.vectorResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import world.hachimi.app.getPlatform
@@ -284,7 +285,7 @@ fun PublishScreen(
                 header = {
                     Text("制作团队")
                     IconButton(onClick = { vm.addStaff() }) {
-                        Icon(Icons.Default.Add, contentDescription = "Add")
+                        Icon(vectorResource(Res.drawable.ms_add), contentDescription = "Add")
                     }
                 },
                 subtitle = { Text("如果该作品的制作者不止一人，请在此添加并选择角色（如混音、编曲）。你可以选择站内用户，也可以仅填写他的名字") }
@@ -307,7 +308,7 @@ fun PublishScreen(
                         )
 
                         IconButton(onClick = { vm.removeStaff(index) }) {
-                            Icon(Icons.Default.Remove, contentDescription = "Remove")
+                            Icon(vectorResource(Res.drawable.ms_remove), contentDescription = "Remove")
                         }
                     }
                 }
@@ -318,7 +319,7 @@ fun PublishScreen(
                     Text("外部链接")
 
                     IconButton(onClick = { vm.showAddExternalLinkDialog() }) {
-                        Icon(Icons.Default.Add, contentDescription = "Add")
+                        Icon(vectorResource(Res.drawable.ms_add), contentDescription = "Add")
                     }
                 },
                 subtitle = { Text("如果你的作品已发表在其他平台上，请在此添加链接") }
@@ -343,7 +344,7 @@ fun PublishScreen(
                         )
 
                         IconButton(onClick = { vm.removeLink(index) }) {
-                            Icon(Icons.Default.Remove, contentDescription = "Remove")
+                            Icon(vectorResource(Res.drawable.ms_remove), contentDescription = "Remove")
                         }
                     }
                 }
@@ -476,7 +477,7 @@ private fun AddExternalLinkDialog(vm: PublishViewModel) {
                                     translatePlatformLabel(it)
                                 } ?: "选择平台"
                             )
-                            Icon(Icons.Default.ArrowDropDown, contentDescription = "ArrowDropDown")
+                            Icon(vectorResource(Res.drawable.ms_arrow_drop_down), contentDescription = "ArrowDropDown")
                         }
                         fun changePlatform(v: String) {
                             platform = v

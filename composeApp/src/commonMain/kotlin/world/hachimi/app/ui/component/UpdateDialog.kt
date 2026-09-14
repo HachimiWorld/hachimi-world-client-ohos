@@ -3,8 +3,6 @@ package world.hachimi.app.ui.component
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Upgrade
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -15,6 +13,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import hachimiworld.composeapp.generated.resources.Res
+import hachimiworld.composeapp.generated.resources.ms_upgrade
+import org.jetbrains.compose.resources.vectorResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import world.hachimi.app.ui.theme.PreviewTheme
 
@@ -43,7 +44,7 @@ fun UpgradeDialog(
             }
         },
         icon = {
-            Icon(Icons.Default.Upgrade, "Upgrade")
+            Icon(vectorResource(Res.drawable.ms_upgrade), "Upgrade")
         },
         onDismissRequest = onDismiss,
         confirmButton = {

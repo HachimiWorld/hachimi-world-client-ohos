@@ -3,9 +3,6 @@ package world.hachimi.app.ui.root.component
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -14,6 +11,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import hachimiworld.composeapp.generated.resources.Res
+import hachimiworld.composeapp.generated.resources.ms_close
+import hachimiworld.composeapp.generated.resources.ms_delete
+import org.jetbrains.compose.resources.vectorResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import world.hachimi.app.model.GlobalStore
 import world.hachimi.app.ui.theme.PreviewTheme
@@ -41,7 +42,7 @@ fun MusicQueue(
                     Text("清空")
                 }
                 IconButton(onClick = onClose) {
-                    Icon(Icons.Filled.Close, contentDescription = "Close")
+                    Icon(vectorResource(Res.drawable.ms_close), contentDescription = "Close")
                 }
             }
 
@@ -109,7 +110,7 @@ private fun Item(
                 }
                 Text(formatSongDuration(duration), style = MaterialTheme.typography.labelSmall)
                 IconButton(onClick = onRemoveClick) {
-                    Icon(Icons.Filled.Delete, contentDescription = "Remove from playlist")
+                    Icon(vectorResource(Res.drawable.ms_delete), contentDescription = "Remove from playlist")
                 }
             }
         }
