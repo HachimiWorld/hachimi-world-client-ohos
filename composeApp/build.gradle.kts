@@ -148,9 +148,9 @@ kotlin {
             implementation(libs.coil.compose)
             implementation(libs.coil.network.ktor3)
 
-//            implementation(libs.filekit.dialogs)
-//            implementation(libs.filekit.dialogs.compose)
-//            implementation(libs.filekit.coil)
+            implementation(libs.filekit.dialogs)
+            implementation(libs.filekit.dialogs.compose)
+            implementation(libs.filekit.coil)
 
         }
         commonTest.dependencies {
@@ -186,6 +186,7 @@ kotlin {
             dependsOn(commonMain.get())
             dependencies {
                 api(libs.compose.multiplatform.export)
+                implementation(libs.ktor.client.curl)
             }
         }
         val ohosArm64Main by getting {

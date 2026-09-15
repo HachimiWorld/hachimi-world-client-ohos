@@ -19,7 +19,7 @@ kotlinx-atomicfu = "0.31.0-1.0.0"
 kotlinx-browser = "0.5.0"
 ktor = "3.3.3-1.0.0"
 kotlinx-datetime = "0.7.1-1.0.0"
-kotlinx-serialization = "1.9.1-SNAPSHOT-1.0.0"
+kotlinx-serialization = "1.9.1-1.0.0"
 
 android-desugarJdkLibs = "2.1.5"
 datastorePreferences = "1.1.7"
@@ -32,7 +32,7 @@ constraintlayoutMultiplatform = "0.6.0"
 logback = "1.5.20"
 buildkonfig = "0.17.1"
 coil = "3.3.0-1.0.0"
-filekit = "0.12.0"
+filekit = "0.12.0-1.0.0"
 mp3spi = "1.9.5.4"
 jflac = "1.5.2"
 
@@ -63,6 +63,7 @@ material-motion = { module = "io.github.fornewid:material-motion-compose-core", 
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
 ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
+ktor-client-curl = { module = "io.ktor:ktor-client-curl", version.ref = "ktor" }
 ktor-client-encoding = { module = "io.ktor:ktor-client-encoding", version.ref = "ktor" }
 ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
