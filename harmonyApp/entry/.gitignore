@@ -4,3 +4,8 @@
 /build
 /.cxx
 /.test
+
+# Auto Generated
+/libs/arm64-v8a/libkn.so
+/src/main/cpp/include/arm64-v8a/libkn_api.h
+/src/main/resources/rawfile/composeResources

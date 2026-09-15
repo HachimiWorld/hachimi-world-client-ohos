@@ -13,10 +13,23 @@ static napi_value MainArkUIViewController(napi_env env, napi_callback_info info)
     return reinterpret_cast<napi_value>(MainArkUIViewController(env));
 }
 
+extern "C" void* HachimiInitPlatform(void* env, void* info);
+extern "C" void* HachimiDisposePlatform(void* env, void* info);
+
+static napi_value InitPlatform(napi_env env, napi_callback_info info) {
+    return reinterpret_cast<napi_value>(HachimiInitPlatform(env, info));
+}
+
+static napi_value DisposePlatform(napi_env env, napi_callback_info info) {
+    return reinterpret_cast<napi_value>(HachimiDisposePlatform(env, info));
+}
+
 EXTERN_C_START
 static napi_value Init(napi_env env, napi_value exports) {
     androidx_compose_ui_arkui_init(env, exports);
     napi_property_descriptor desc[] = {
+        {"initPlatform", nullptr, InitPlatform, nullptr, nullptr, nullptr, napi_default, nullptr},
+        {"disposePlatform", nullptr, DisposePlatform, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"MainArkUIViewController", nullptr, MainArkUIViewController, nullptr, nullptr, nullptr, napi_default, nullptr},
     };
     napi_define_properties(env, exports, sizeof(desc) / sizeof(desc[0]), desc);
