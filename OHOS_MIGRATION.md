@@ -105,6 +105,21 @@ node "$DEVECO_HOME/tools/hvigor/bin/hvigorw.js" --mode module -p module="entry@d
 
 ## 依赖来源
 
+## 媒体控制中心与后台播放
+
+- 播放信息通过 **AVSession** 发布（`world/hachimi/app/player/OhosMediaSession.kt`，CPF 的
+  K/N 发行版自带 `OHAVSession.def`，不需要自己写 cinterop）。系统媒体卡片显示封面/歌名/歌手，
+  并能回传播放、暂停、上一首、下一首和拖动进度；命令统一转给 `PlayerService`，与播放引擎解耦。
+- **`assetId` 是必需的**：不设置时 `OH_AVSession_SetAVMetadata` 返回
+  `AV_SESSION_ERR_SERVICE_EXCEPTION (6600101)`，而其它 setter 都返回成功，很容易误判成封面问题。
+- 后台播放用长时任务：Kotlin 在播放状态翻转时通知宿主（`playbackActive`），
+  `EntryAbility` 调 `backgroundTaskManager.startBackgroundRunning(context, AUDIO_PLAYBACK, wantAgent)`，
+  暂停时停止。三个前提缺一不可：
+  1. `module.json5` 的 `requestPermissions` 要有 `ohos.permission.KEEP_BACKGROUND_RUNNING`；
+  2. `module.json5` 的 `abilities` 要有 `"backgroundModes": ["audioPlayback"]`，
+     否则报 `9800005 Continuous Task verification failed. The bgMode is invalid.`；
+  3. 应用必须持有处于播放状态的 AVSession，否则系统会取消这个长时任务。
+
 | 依赖 | 来源 |
 | --- | --- |
 | `org.jetbrains.*`（Kotlin / Compose / skiko / collection） | CPF nexus（`maven.eazytec-cloud.com`） |

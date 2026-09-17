@@ -4,12 +4,49 @@ import { window } from '@kit.ArkUI';
 import { BusinessError } from '@kit.BasicServicesKit';
 import { initPlatform, disposePlatform } from 'libentry.so';
 import { pasteboard } from '@kit.BasicServicesKit';
+import { backgroundTaskManager } from '@kit.BackgroundTasksKit';
+import { wantAgent, WantAgent } from '@kit.AbilityKit';
 
 const DOMAIN = 0x0000;
 const TRANSPARENT = '#00000000';
 
 export default class EntryAbility extends UIAbility {
   private mainWindow: window.Window | undefined;
+  private backgroundPlaybackRunning = false;
+
+  /**
+   * Keeps the process alive while audio is playing so playback continues after the app goes to the
+   * background. HarmonyOS cancels an `AUDIO_PLAYBACK` task that does not own an AVSession, so this
+   * only works together with the media session in Kotlin.
+   */
+  private async updateBackgroundPlayback(active: boolean): Promise<void> {
+    if (active === this.backgroundPlaybackRunning) return;
+    try {
+      if (active) {
+        const notification: WantAgent = await wantAgent.getWantAgent({
+          wants: [{
+            bundleName: this.context.abilityInfo.bundleName,
+            abilityName: this.context.abilityInfo.name
+          }],
+          operationType: wantAgent.OperationType.START_ABILITY,
+          requestCode: 0,
+          wantAgentFlags: [wantAgent.WantAgentFlags.UPDATE_PRESENT_FLAG]
+        });
+        await backgroundTaskManager.startBackgroundRunning(
+          this.context, backgroundTaskManager.BackgroundMode.AUDIO_PLAYBACK, notification);
+        this.backgroundPlaybackRunning = true;
+        hilog.info(DOMAIN, 'HachimiPlatform', 'Background playback started');
+      } else {
+        await backgroundTaskManager.stopBackgroundRunning(this.context);
+        this.backgroundPlaybackRunning = false;
+        hilog.info(DOMAIN, 'HachimiPlatform', 'Background playback stopped');
+      }
+    } catch (error) {
+      hilog.error(DOMAIN, 'HachimiPlatform',
+        'Background playback update failed: %{public}s', JSON.stringify(error));
+    }
+  }
+
 
   /**
    * Immersive layout: let the window (and therefore Compose) draw underneath the status and
@@ -45,6 +82,10 @@ export default class EntryAbility extends UIAbility {
         this.applyImmersiveLayout(color);
         return;
       }
+      if (operation === 'playbackActive') {
+        this.updateBackgroundPlayback(value === 'true');
+        return;
+      }
       if (operation !== 'openUrl') return;
       this.context.startAbility({
         action: 'ohos.want.action.viewData',
@@ -63,6 +104,7 @@ export default class EntryAbility extends UIAbility {
   }
 
   onDestroy(): void {
+    this.updateBackgroundPlayback(false);
     disposePlatform();
     hilog.info(DOMAIN, 'testTag', '%{public}s', 'Ability onDestroy');
   }

@@ -68,6 +68,7 @@ import platform.AVSessionKit.OHAVSession.PLAYBACK_STATE_PAUSED
 import platform.AVSessionKit.OHAVSession.PLAYBACK_STATE_PLAYING
 import platform.AVSessionKit.OHAVSession.SESSION_TYPE_AUDIO
 import platform.AbilityKit.Native_Bundle.OH_NativeBundle_GetCurrentApplicationInfo
+import world.hachimi.app.sendOhosPlatformAction
 import world.hachimi.app.logging.Logger
 import world.hachimi.app.model.PlayerService
 import kotlin.time.Clock
@@ -211,6 +212,9 @@ class OhosMediaSession(private val playerService: PlayerService) {
                 applyPlaybackState()
                 applyPosition()
                 publishedPositionAt = nowMillis()
+                // Let the host start/stop the audio-playback continuous task, so playback survives
+                // the app moving to the background.
+                sendOhosPlatformAction(PLAYBACK_ACTION, playing.toString())
             } else if (playing && nowMillis() - publishedPositionAt >= POSITION_INTERVAL_MS) {
                 applyPosition()
                 publishedPositionAt = nowMillis()
@@ -328,6 +332,8 @@ class OhosMediaSession(private val playerService: PlayerService) {
     private fun nowMillis(): Long = Clock.System.now().toEpochMilliseconds()
 
     private companion object {
+        const val PLAYBACK_ACTION = "playbackActive"
+
         val controlCommands: List<AVSession_ControlCommand> = listOf(
             CONTROL_CMD_PLAY,
             CONTROL_CMD_PAUSE,
