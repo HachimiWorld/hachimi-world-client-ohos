@@ -27,6 +27,7 @@ import world.hachimi.app.api.module.SongModule
 import world.hachimi.app.api.ok
 import world.hachimi.app.logging.Logger
 import world.hachimi.app.util.singleLined
+import world.hachimi.app.util.getStringOnMain
 import kotlin.time.Duration.Companion.milliseconds
 
 private const val TAG = "artwork_detail"
@@ -145,7 +146,7 @@ class ArtworkDetailViewModel(
             // unreachable — set localized message asynchronously
             jmidValid = false
             viewModelScope.launch {
-                jmidSupportText = org.jetbrains.compose.resources.getString(Res.string.artwork_jmid_prefix_not_set)
+                jmidSupportText = getStringOnMain(Res.string.artwork_jmid_prefix_not_set)
             }
             return
         }
@@ -170,7 +171,7 @@ class ArtworkDetailViewModel(
                                             jmidValid = false
                                             viewModelScope.launch {
                                                 jmidSupportText =
-                                                    org.jetbrains.compose.resources.getString(Res.string.artwork_jmid_already_used)
+                                                    getStringOnMain(Res.string.artwork_jmid_already_used)
                                             }
                                         }
                                     } else {
@@ -192,7 +193,7 @@ class ArtworkDetailViewModel(
         } else {
             jmidValid = false
             viewModelScope.launch {
-                jmidSupportText = org.jetbrains.compose.resources.getString(Res.string.publish_jmid_number_format)
+                jmidSupportText = getStringOnMain(Res.string.publish_jmid_number_format)
             }
         }
     }

@@ -64,6 +64,7 @@ import world.hachimi.app.api.ok
 import world.hachimi.app.logging.Logger
 import world.hachimi.app.nav.NavigationRequest
 import world.hachimi.app.util.LrcParser
+import world.hachimi.app.util.getStringOnMain
 import world.hachimi.app.util.parseJmid
 import world.hachimi.app.util.singleLined
 import kotlin.random.Random
@@ -1003,7 +1004,7 @@ class PublishViewModel(
                                         } else {
                                             initJmidValid = false
                                             viewModelScope.launch {
-                                                initJmidSupportText = org.jetbrains.compose.resources.getString(Res.string.publish_init_jmid_prefix_used)
+                                                initJmidSupportText = getStringOnMain(Res.string.publish_init_jmid_prefix_used)
                                             }
                                         }
                                     } else {
@@ -1024,7 +1025,7 @@ class PublishViewModel(
             }
         } else {
             viewModelScope.launch {
-                initJmidSupportText = org.jetbrains.compose.resources.getString(Res.string.publish_init_jmid_invalid_format)
+                initJmidSupportText = getStringOnMain(Res.string.publish_init_jmid_invalid_format)
             }
             initJmidValid = false
         }
@@ -1055,7 +1056,7 @@ class PublishViewModel(
             // unreachable
             jmidValid = false
             viewModelScope.launch {
-                jmidSupportText = org.jetbrains.compose.resources.getString(Res.string.artwork_jmid_prefix_not_set)
+                jmidSupportText = getStringOnMain(Res.string.artwork_jmid_prefix_not_set)
             }
             return
         }
@@ -1083,7 +1084,7 @@ class PublishViewModel(
                                             jmidValid = false
                                             viewModelScope.launch {
                                                 jmidSupportText =
-                                                    org.jetbrains.compose.resources.getString(Res.string.artwork_jmid_already_used)
+                                                    getStringOnMain(Res.string.artwork_jmid_already_used)
                                             }
                                         }
                                     } else {
@@ -1105,9 +1106,8 @@ class PublishViewModel(
         } else {
             jmidValid = false
             viewModelScope.launch {
-                jmidSupportText = org.jetbrains.compose.resources.getString(Res.string.publish_jmid_number_format)
+                jmidSupportText = getStringOnMain(Res.string.publish_jmid_number_format)
             }
         }
     }
 }
-

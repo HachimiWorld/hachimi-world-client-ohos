@@ -38,6 +38,7 @@ import world.hachimi.app.api.parseJwtWithoutVerification
 import world.hachimi.app.getPlatform
 import world.hachimi.app.logging.Logger
 import world.hachimi.app.nav.NavigationRequest
+import world.hachimi.app.util.getStringOnMain
 import world.hachimi.app.nav.Route
 import world.hachimi.app.player.PlayerEngine
 import world.hachimi.app.storage.MyDataStore
@@ -211,7 +212,7 @@ class GlobalStore(
         // Resolve a StringResource to a localized String and delegate to the existing alert(text: String?)
         scope.launch {
             try {
-                val resolved = org.jetbrains.compose.resources.getString(text, *params)
+                val resolved = getStringOnMain(text, *params)
                 alert(resolved)
             } catch (e: Throwable) {
                 // Fallback to a simple unknown error message if getString isn't available on the platform
